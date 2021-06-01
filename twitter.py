@@ -9,16 +9,33 @@ TWITTER_API_SECRET = str(os.getenv('TWITTER_API_SECRET'))
 TWITTER_ACCESS_TOKEN = str(os.getenv('TWITTER_ACCESS_TOKEN'))
 TWITTER_ACCESS_TOKEN_SECRET = str(os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
 
-# Authenticate to Twitter
-auth = tweepy.OAuthHandler("pGBDoAaEpkliVKBOLwjtcmHGc", 
-    "xF3g1wrP50b6BlZEd20u4oVfjgH1FGQcuWUzlQO5aUWOufvlhw")
-auth.set_access_token("622518493-6VcLIPprbQbv9wkcBBPvCle8vsjU9fE85Dq9oStl", 
-    "tH9aKQbQQ1iRdYTcLSsPwitl44BkAc6jilrsU0ifnXvZhq")
+class CustomStreamListener(tweepy.StreamListener):
+    def __init__(self, api):
+        self.api = api
+        self.me = api.me()
 
-api = tweepy.API(auth)
+    def on_status(self, tweet):
+        print(f"{tweet.user.name}:{tweet.text}")
 
-try:
-    api.verify_credentials()
-    print("Authentication OK")
-except:
-    print("Error during authentication")
+    def on_error(self, status):
+        print("Error detected")
+
+# Authenticate with Twitter
+auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+
+# Create API object
+api = tweepy.API(auth, wait_on_rate_limit=True,
+    wait_on_rate_limit_notify=True)
+
+# try:
+#     api.verify_credentials()
+#     print("Authentication OK")
+# except:
+#     print("Error during authentication")
+
+tweets_listener = CustomStreamListener(api)
+stream = tweepy.Stream(api.auth, tweets_listener)
+# Must be user_id (must convert this)
+# My user: 198899653
+stream.filter(follow=["198899653"])
