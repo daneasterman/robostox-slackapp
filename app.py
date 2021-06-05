@@ -2,7 +2,10 @@ import os
 import tweepy
 import json
 import requests
+
 from slack_bolt import App
+from slack_sdk.webhook import WebhookClient
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -17,26 +20,18 @@ TWITTER_API_SECRET = str(os.getenv('TWITTER_API_SECRET'))
 TWITTER_ACCESS_TOKEN = str(os.getenv('TWITTER_ACCESS_TOKEN'))
 TWITTER_ACCESS_TOKEN_SECRET = str(os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
 
-slack_data = {'text': "Tweet sent!"}
-
 # Start Twitter App
 class CustomStreamListener(tweepy.StreamListener):
-
     def __init__(self, api):
         self.api = api
         self.me = api.me()
 
     def on_status(self, tweet):        
         print(f"{tweet.user.name}:{tweet.text}")
-        response = requests.post(
-            WEBHOOK_URI, data=json.dumps(slack_data), 
-            headers={'Content-Type': 'application/json'}
-        )
-        if response.status_code != 200:
-            raise ValueError(
-                'Request to slack returned an error %s, the response is:\n%s'
-                % (response.status_code, response.text)
-            )
+        webhook = WebhookClient(WEBHOOK_URI)
+        response = webhook.send(text="Refactored tweet sent!")
+        assert response.status_code == 200
+        assert response.body == "ok"        
 
     def on_error(self, status):
         print("Error detected")
