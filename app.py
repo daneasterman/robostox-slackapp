@@ -29,9 +29,21 @@ class CustomStreamListener(tweepy.StreamListener):
     def on_status(self, tweet):        
         print(f"{tweet.user.name}:{tweet.text}")
         webhook = WebhookClient(WEBHOOK_URI)
-        response = webhook.send(text="Refactored tweet sent!")
+        # response = webhook.send(text="simple text example")
+        response = webhook.send(
+            text=f"Twitter user: {tweet.user.name} just tweeted: {tweet.text}",
+            blocks=[
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>"
+                    }
+                }
+            ]
+        )
         assert response.status_code == 200
-        assert response.body == "ok"        
+        assert response.body == "ok"
 
     def on_error(self, status):
         print("Error detected")
