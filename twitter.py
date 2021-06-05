@@ -5,7 +5,6 @@ load_dotenv()
 
 TWITTER_API_KEY = str(os.getenv('TWITTER_API_KEY'))
 TWITTER_API_SECRET = str(os.getenv('TWITTER_API_SECRET'))
-
 TWITTER_ACCESS_TOKEN = str(os.getenv('TWITTER_ACCESS_TOKEN'))
 TWITTER_ACCESS_TOKEN_SECRET = str(os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
 
@@ -15,6 +14,7 @@ class CustomStreamListener(tweepy.StreamListener):
         self.me = api.me()
 
     def on_status(self, tweet):
+        # make webhook post request here
         print(f"{tweet.user.name}:{tweet.text}")
 
     def on_error(self, status):
@@ -29,11 +29,6 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 tweets_listener = CustomStreamListener(api)
 stream = tweepy.Stream(api.auth, tweets_listener)
-# Must be user_id (must convert this) daneasterman user: 198899653
-stream.filter(follow=["198899653"])
+# stream.filter(follow=["198899653"])
+stream.filter(track=["Python"], languages=["en"])
 
-# try:
-#     api.verify_credentials()
-#     print("Authentication OK")
-# except:
-#     print("Error during authentication")

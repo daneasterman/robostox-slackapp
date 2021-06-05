@@ -1,6 +1,10 @@
 import json
 import requests
 
+# Disable for now:
+# from slack_bolt.adapter.flask import SlackRequestHandler
+# from flask import Flask, request, Response
+
 slack_data = {'text': "Simple python proof of concept!"}
 
 response = requests.post(
