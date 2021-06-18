@@ -9,6 +9,7 @@ Jinja2==3.0.1
 lxml==4.6.3
 MarkupSafe==2.0.1
 multitasking==0.0.9
+numerize==0.12
 numpy==1.20.3
 oauthlib==3.1.0
 pandas==1.2.4

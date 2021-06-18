@@ -1,5 +1,6 @@
 import os
 import yfinance as yf
+from numerize import numerize
 from datetime import datetime, time, timedelta
 from slack_bolt import App
 from slack_sdk import WebClient
@@ -13,24 +14,33 @@ SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
 def percent_change(start_point, end_point):
     return((float(end_point)-start_point)/abs(start_point))*100.00
 
+def get_period_percent_change(stock, period):
+    df_period = stock.history(period=period)
+    period_start = df_period.Open.iat[0]
+    period_end = df_period.Open.iat[-1]
+    period_percent_change = percent_change(period_start, period_end)
+    return period_percent_change
+
 def get_single_stock():
     # Hardcode as MSFT for now, need to catch error here, what if API fails?
     stock = yf.Ticker("MSFT")
     
     # General info
-    long_name = stock.info['longName']
     symbol = stock.info['symbol']
-    price = stock.info['regularMarketPrice']
-    marketcap = stock.info['marketCap']
-        
+    long_name = stock.info['longName']
+    # What if problem with img provider / no company logo?
+    logo = stock.info['logo_url']
+    previous_close = stock.info['previousClose']
+    current_price = stock.info['regularMarketPrice']
+    raw_marketcap = stock.info['marketCap']
+    formatted_marketcap = numerize.numerize(raw_marketcap, 2)    
     
-    # Week percent change:
-    week_df = stock.history(period="5d")
-    week_start_price = week_df.Open.iat[0]
-    week_end_price = week_df.Open.iat[-1]
-    week_percent_change = percent_change(week_start_price, week_end_price)    
-    print(round(week_percent_change, 2))
-
+    day_percent_change = round(percent_change(previous_close, current_price), 2)
+    
+    week_percent_change = round(get_period_percent_change(stock, "5d"), 2)    
+    month_percent_change = round(get_period_percent_change(stock, "1mo"), 2)    
+    year_percent_change = round(get_period_percent_change(stock, "ytd"), 2)  
+        
 
 get_single_stock()
 
