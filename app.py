@@ -24,54 +24,59 @@ def get_period_percent_change(stock, period):
 def get_single_stock():
     # Hardcode as MSFT for now, need to catch error here, what if API fails?
     stock = yf.Ticker("MSFT")
-    
-    # General info
-    symbol = stock.info['symbol']
-    long_name = stock.info['longName']
-    # What if problem with img provider / no company logo?
-    logo = stock.info['logo_url']
+
     previous_close = stock.info['previousClose']
     current_price = stock.info['regularMarketPrice']
     raw_marketcap = stock.info['marketCap']
-    formatted_marketcap = numerize.numerize(raw_marketcap, 2)    
-    
-    day_percent_change = round(percent_change(previous_close, current_price), 2)
-    
-    week_percent_change = round(get_period_percent_change(stock, "5d"), 2)    
-    month_percent_change = round(get_period_percent_change(stock, "1mo"), 2)    
-    year_percent_change = round(get_period_percent_change(stock, "ytd"), 2)  
+    marketcap = numerize.numerize(raw_marketcap, 2)   
+
+    stock_data = {
+        'symbol': stock.info['symbol'],
+        'long_name': stock.info['longName'],
+        'logo': stock.info['logo_url'],
+        'current_price': current_price,
+        'marketcap': marketcap,
+        'day_percent_change': round(percent_change(previous_close, current_price), 2),
+        'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
+        'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
+        'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
+    }
+
+    return stock_data
         
 
-get_single_stock()
+# stock_data = get_single_stock()
 
-# client = WebClient(SLACK_BOT_TOKEN)
-# def get_convo_id():    
-#     channel_name = "test-alerts"
-#     convo_id = None
-#     try:
-#         for result in client.conversations_list():
-#             if convo_id is not None:
-#                 break
-#             for channel in result["channels"]:
-#                 if channel["name"] == channel_name:
-#                     convo_id = channel["id"]                    
-#                     return convo_id                    
+client = WebClient(SLACK_BOT_TOKEN)
+def get_convo_id():    
+    channel_name = "test-alerts"
+    convo_id = None
+    try:
+        for result in client.conversations_list():
+            if convo_id is not None:
+                break
+            for channel in result["channels"]:
+                if channel["name"] == channel_name:
+                    convo_id = channel["id"]                    
+                    return convo_id                    
 
-#     except SlackApiError as e:
-#         print(f"Error: {e}")
+    except SlackApiError as e:
+        print(f"Error: {e}")
 
-# def publish_message():
-#     convo_id = get_convo_id()
-#     try:    
-#         result = client.chat_postMessage(
-#             channel=convo_id,
-#             text="Hello world!"
-#         )
-#         print(result)
+def publish_message():
+    convo_id = get_convo_id()
+    try:    
+        result = client.chat_postMessage(
+            channel=convo_id,
+            text="Test publish message function"
+        )
+        print(result)
 
-#     except SlackApiError as e:
-#         print(f"Error: {e}")
+    except SlackApiError as e:
+        print(f"Error: {e}")
 
+# Need to call function:
+publish_message()
 
 # Start Slack App
 app = App(
