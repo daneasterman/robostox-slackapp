@@ -11,9 +11,8 @@ def get_period_percent_change(stock, period):
     period_percent_change = percent_change(period_start, period_end)
     return period_percent_change
 
-def get_single_stock():
-    # Try block? Hardcode as MSFT for now, need to catch error here, what if API fails?
-    stock = yf.Ticker("MSFT")
+def generate_stock_info(symbol):
+    stock = yf.Ticker(symbol)
 
     previous_close = stock.info['previousClose']
     current_price = stock.info['regularMarketPrice']
@@ -34,15 +33,12 @@ def get_single_stock():
         'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
         'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
     }
-    return stock_data
-
-def render_stock_content():
-    stock_data = get_single_stock()
-    content =  [{
+    
+    stock_content =  [{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": f"Hey :wave:  here's the latest price information for {stock_data['long_name']}:"
+				"text": f"Here's the latest information for {stock_data['long_name']}"
 			}
 		},
 		{
@@ -60,11 +56,11 @@ def render_stock_content():
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "*Price:*  $200 \n\n\n *Mkt Cap:*  $200,000 \n *Volume:*  $150,150 \n\n\n *24hr:* 2.0% \n *5d:* 15% \n *30d:* 25% \n *1yr:* 200%"
+				"text": f"*Price:* ${stock_data['current_price']} \n\n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 			},
 			"accessory": {
 				"type": "image",
-				"image_url": "https://logo.clearbit.com/apple.com",
+				"image_url": f"{stock_data['logo']}",
 				"alt_text": "company logo"
 			}
 		},
@@ -72,10 +68,10 @@ def render_stock_content():
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "*View Charts:* <https://finance.yahoo.com/quote/AAPL|Yahoo Finance | Apple>"
+				"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>"
 			}
 		},
 		{
 			"type": "divider"
 		}]
-    return content
+    return stock_data, stock_content
