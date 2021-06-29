@@ -1,5 +1,6 @@
 import yfinance as yf
 from numerize import numerize
+from utils.check_valid_image import check_valid_image
 
 def percent_change(start_point, end_point):
     return((float(end_point)-start_point)/abs(start_point))*100.00
@@ -13,26 +14,29 @@ def get_period_percent_change(stock, period):
 
 def generate_stock_info(symbol):
     stock = yf.Ticker(symbol)
-
+    
     previous_close = stock.info['previousClose']
     current_price = stock.info['regularMarketPrice']
+	
     raw_marketcap = stock.info['marketCap']
     marketcap = numerize.numerize(raw_marketcap, 2)
     raw_volume = stock.info['averageVolume']
     volume = numerize.numerize(raw_volume, 2)
+    logo = stock.info['logo_url']
+    is_valid_image = check_valid_image(logo)    
 
     stock_data = {
         'symbol': stock.info['symbol'],
         'long_name': stock.info['longName'],
-        'logo': stock.info['logo_url'],
+        'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
         'current_price': current_price,
         'marketcap': marketcap,
-        'volume': volume,        
+        'volume': volume,
         'day_percent_change': round(percent_change(previous_close, current_price), 2),
         'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
         'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
         'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
-    }
+	}	
     
     stock_content =  [{
 			"type": "section",
@@ -74,4 +78,5 @@ def generate_stock_info(symbol):
 		{
 			"type": "divider"
 		}]
+	
     return stock_data, stock_content
