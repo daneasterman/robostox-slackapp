@@ -19,7 +19,7 @@ app = App(
 )
 
 @app.command("/stock")
-def run_stock_price(ack, say, command, logger):
+def run_stock_command(ack, say, command, logger):
 		ack()
 		user_symbol = command['text']
 		try:

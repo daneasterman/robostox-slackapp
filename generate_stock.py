@@ -36,7 +36,7 @@ def generate_stock_info(symbol):
         'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
         'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
         'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
-	}	
+		}	
     
     stock_content =  [{
 			"type": "section",
@@ -45,9 +45,7 @@ def generate_stock_info(symbol):
 				"text": f"Here's the latest information for {stock_data['long_name']}"
 			}
 		},
-		{
-			"type": "divider"
-		},
+		{"type": "divider"},
 		{
 			"type": "header",
 			"text": {
