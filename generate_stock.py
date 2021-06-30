@@ -8,7 +8,7 @@ def percent_change(start_point, end_point):
 def get_period_percent_change(stock, period):
     df_period = stock.history(period=period)
     period_start = df_period.Open.iat[0]
-    period_end = df_period.Open.iat[-1]
+    period_end = df_period.Close.iat[-1]
     period_percent_change = percent_change(period_start, period_end)
     return period_percent_change
 
