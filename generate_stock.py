@@ -13,68 +13,69 @@ def get_period_percent_change(stock, period):
     return period_percent_change
 
 def generate_stock_info(symbol):
-    stock = yf.Ticker(symbol)
-    
-    previous_close = stock.info['previousClose']
-    current_price = stock.info['regularMarketPrice']
+	stock = yf.Ticker(symbol)
 	
-    raw_marketcap = stock.info['marketCap']
-    marketcap = numerize.numerize(raw_marketcap, 2)
-    raw_volume = stock.info['averageVolume']
-    volume = numerize.numerize(raw_volume, 2)
-    logo = stock.info['logo_url']
-    is_valid_image = check_valid_image(logo)    
+	previous_close = stock.info['previousClose']
+	current_price = stock.info['regularMarketPrice']
+	asdf = "asdf"
 
-    stock_data = {
-        'symbol': stock.info['symbol'],
-        'long_name': stock.info['longName'],
-        'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
-        'current_price': current_price,
-        'marketcap': marketcap,
-        'volume': volume,
-        'day_percent_change': round(percent_change(previous_close, current_price), 2),
-        'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
-        'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
-        'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
-		}	
-    
-    stock_content =  [{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": f"Here's the latest information for {stock_data['long_name']}"
-			}
-		},
-		{"type": "divider"},
-		{
-			"type": "header",
-			"text": {
-				"type": "plain_text",
-				"text": f"{stock_data['long_name']}  |  {stock_data['symbol']}",
-				"emoji": True
-			}
-		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": f"*Price:* ${stock_data['current_price']} \n\n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
-			},
-			"accessory": {
-				"type": "image",
-				"image_url": f"{stock_data['logo']}",
-				"alt_text": "company logo"
-			}
-		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>"
-			}
-		},
-		{
-			"type": "divider"
-		}]
+	raw_marketcap = stock.info['marketCap']
+	marketcap = numerize.numerize(raw_marketcap, 2)
+	raw_volume = stock.info['averageVolume']
+	volume = numerize.numerize(raw_volume, 2)
+	logo = stock.info['logo_url']
+	is_valid_image = check_valid_image(logo)
+
+	stock_data = {
+			'symbol': stock.info['symbol'],
+			'long_name': stock.info['longName'],
+			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
+			'current_price': current_price,
+			'marketcap': marketcap,
+			'volume': volume,
+			'day_percent_change': round(percent_change(previous_close, current_price), 2),
+			'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
+			'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
+			'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
+	}
 	
-    return stock_data, stock_content
+	stock_content =  [{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"Here's the latest information for {stock_data['long_name']}"
+		}
+	},
+	{"type": "divider"},
+	{
+		"type": "header",
+		"text": {
+			"type": "plain_text",
+			"text": f"{stock_data['long_name']}  |  {stock_data['symbol']}",
+			"emoji": True
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"*Price:* ${stock_data['current_price']} \n\n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+		},
+		"accessory": {
+			"type": "image",
+			"image_url": f"{stock_data['logo']}",
+			"alt_text": "company logo"
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>"
+		}
+	},
+	{
+		"type": "divider"
+	}]
+	
+	return stock_data, stock_content

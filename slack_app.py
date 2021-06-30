@@ -18,29 +18,36 @@ app = App(
 		signing_secret=SLACK_SIGNING_SECRET
 )
 
+# INSERT NEXT CORE APP FUNCTIONALITY HERE.
+
+
+
+
+
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):
-		ack()
-		user_symbol = command['text']
-		try:
-			stock_data, stock_content = generate_stock_info(user_symbol)
-			say(
-				text=f"Here's your update for {stock_data['long_name']}",
-				blocks=stock_content
-			)
-		except KeyError:
-			say(
-				text=f"Sorry, the ticker symbol {user_symbol} was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on: Yahoo Finance.",
-				blocks=[{
-					"type": "section",
-					"text": {"type": "mrkdwn", "text": f"Sorry, the ticker symbol *{user_symbol}* was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on: <https://finance.yahoo.com/|Yahoo Finance>"}
-					}]
-			)
-		except Exception as e:
-			say(
-				text=f"Sorry, something has gone wrong. Please contact the creator of this app here: daniel.easterman@gmail.com for help or more information."
-			)
-			logger.error(f"ERROR***: {e}")
+	ack()
+	asdf = "asdf"
+	user_symbol = command['text']
+	try:
+		stock_data, stock_content = generate_stock_info(user_symbol)
+		say(
+			text=f"Here's your update for {stock_data['long_name']}",
+			blocks=stock_content
+		)
+	except KeyError:
+		say(
+			text=f"Sorry, the ticker symbol {user_symbol} was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on: Yahoo Finance.",
+			blocks=[{
+				"type": "section",
+				"text": {"type": "mrkdwn", "text": f"Sorry, the ticker symbol *{user_symbol}* was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on: <https://finance.yahoo.com/|Yahoo Finance>"}
+				}]
+		)
+	except Exception as e:
+		say(
+			text=f"Sorry, something has gone wrong. Please contact the creator of this app here: daniel.easterman@gmail.com for help or more information."
+		)
+		logger.error(f"ERROR***: {e}")
 
 
 # Start Bolt app
