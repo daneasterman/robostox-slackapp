@@ -39,7 +39,7 @@ def generate_stock_info(symbol):
 			'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
 	}
 	
-	stock_content =  [{
+	stock_content = [{
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",

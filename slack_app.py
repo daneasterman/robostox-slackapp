@@ -6,6 +6,7 @@ from slack_bolt import App
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from generate_stock import generate_stock_info
+from multiple_select_menu import static_menu_content
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,16 +19,30 @@ app = App(
 		signing_secret=SLACK_SIGNING_SECRET
 )
 
-# INSERT NEXT CORE APP FUNCTIONALITY HERE.
+@app.event("app_home_opened")
+def update_home_tab(client, event, logger):
+  try:    
+    client.views_publish(      
+      user_id=event["user"],
+      view={
+        "type": "home",
+        "callback_id": "home_view",
+				"blocks": static_menu_content
+      }
+    )  
+  except Exception as e:
+    logger.error(f"HOME TAB ERROR: {e}")
 
-
-
+@app.action("ticker_menu_select")
+def ack_ticker_select(ack, body):
+	ack()
+	breakpoint()
+	print("***BODY, CLICKED", body)
 
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):
-	ack()
-	asdf = "asdf"
+	ack()	
 	user_symbol = command['text']
 	try:
 		stock_data, stock_content = generate_stock_info(user_symbol)
@@ -35,6 +50,7 @@ def run_stock_command(ack, say, command, logger):
 			text=f"Here's your update for {stock_data['long_name']}",
 			blocks=stock_content
 		)
+		# To do: error text can be cleaned up:
 	except KeyError:
 		say(
 			text=f"Sorry, the ticker symbol {user_symbol} was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on: Yahoo Finance.",
@@ -47,7 +63,7 @@ def run_stock_command(ack, say, command, logger):
 		say(
 			text=f"Sorry, something has gone wrong. Please contact the creator of this app here: daniel.easterman@gmail.com for help or more information."
 		)
-		logger.error(f"ERROR***: {e}")
+		logger.error(f"COMMAND ERROR***: {e}")
 
 
 # Start Bolt app

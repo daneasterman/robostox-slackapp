@@ -9,19 +9,16 @@ def update_home_tab(client, event, logger):
       view={
         "type": "home",
         "callback_id": "home_view",
-
-        # body of the view
+				# body of the view
         "blocks": [
           {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Welcome to your _App's Home_* :tada:"
+              "text": "*Select which stocks you would like to receive notifications for:*"
             }
           },
-          {
-            "type": "divider"
-          },
+          {"type": "divider"},
           {
             "type": "section",
             "text": {
