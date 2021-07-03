@@ -2,6 +2,7 @@ bidict==0.21.2
 certifi==2020.12.5
 chardet==4.0.0
 click==8.0.1
+Flask==2.0.1
 idna==2.10
 importlib-metadata==4.4.0
 itsdangerous==2.0.1
@@ -29,5 +30,6 @@ typing-extensions==3.10.0.0
 urllib3==1.26.3
 websocket-client==0.58.0
 Werkzeug==2.0.1
+whitenoise==5.2.0
 yfinance==0.1.59
 zipp==3.4.1

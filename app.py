@@ -3,8 +3,12 @@ import yfinance as yf
 from numerize import numerize
 from datetime import datetime, time, timedelta
 from slack_bolt import App
+from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from flask import Flask, request
+from whitenoise import WhiteNoise
+
 from generate_stock import generate_stock_info
 from multiple_select_menu import static_menu_content
 from dotenv import load_dotenv
@@ -33,11 +37,10 @@ def update_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@app.action("ticker_menu_select")
-def ack_ticker_select(ack, body):
-	ack()
-	breakpoint()
-	print("***BODY, CLICKED", body)
+@app.action("ticker_select")
+def ack_ticker_select(ack, body, client, action):
+	ack()	
+	print(body)
 
 
 @app.command("/stock")
@@ -63,9 +66,13 @@ def run_stock_command(ack, say, command, logger):
 		say(
 			text=f"Sorry, something has gone wrong. Please contact the creator of this app here: daniel.easterman@gmail.com for help or more information."
 		)
-		logger.error(f"COMMAND ERROR***: {e}")
+		logger.error(f"COMMAND ERROR: {e}")
+
+flask_app = Flask(__name__)
+handler = SlackRequestHandler(app)
+flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
 
 
-# Start Bolt app
-if __name__ == "__main__":
-		app.start(port=int(os.environ.get("PORT", 3000)))
+@flask_app.route("/slack/events", methods=["POST"])
+def slack_events():
+    return handler.handle(request)
