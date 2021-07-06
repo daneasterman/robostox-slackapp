@@ -1,6 +1,3 @@
-# Read clean-nyse-sample
-# iterate over the json and print out values
-
 import json
 import pprint
 
@@ -14,7 +11,8 @@ with open('data/premium/stocks/raw/nyse.json') as nyse_file:
 		"text": {
 			"type": "plain_text",
 			"text": f"{s['Name']} - {s['Code']}",
-			"exchange": s["Exchange"]
+			# For inspection:
+			# "exchange": s["Exchange"]
 		},
 		"value": s["Code"]
 })
@@ -31,12 +29,12 @@ with open('data/premium/stocks/raw/nasdaq.json') as nasdaq_file:
 		"value": s["Code"]
 })
 
-# with open('nyse_nasdaq_out.json', 'w') as outfile:
-# 	json.dump(new_json, outfile, indent=4)
-	# json.dump(new_json, outfile)
+with open('nyse_nasdaq_ver2.json', 'w') as outfile:
+	json.dump(new_json, outfile)
+	# For inspection:
+	# json.dump(new_json, outfile, indent=4)
 
 
-print('NYSE DATA COUNT', len(nyse_data))
-print('NASDAQ DATA COUNT', len(nasdaq_data))
-print(len(new_json['options']))
-	
+print('NYSE DATA COUNT:', len(nyse_data))
+print('NASDAQ DATA COUNT:', len(nasdaq_data))
+print('TOTAL:', len(new_json['options']))
