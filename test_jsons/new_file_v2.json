@@ -1,0 +1,39 @@
+{
+    "options": [
+        {
+            "text": {
+                "type": "plain_text",
+                "text": "Agilent Technologies, Inc - A"
+            },
+            "value": "A"
+        },
+        {
+            "text": {
+                "type": "plain_text",
+                "text": "Alcoa Corporation - AA"
+            },
+            "value": "AA"
+        },
+        {
+            "text": {
+                "type": "plain_text",
+                "text": "Ares Acquisition Corporation - AAC"
+            },
+            "value": "AAC"
+        },
+        {
+            "text": {
+                "type": "plain_text",
+                "text": "Arlington Asset Investment Corp - AAIC"
+            },
+            "value": "AAIC"
+        },
+        {
+            "text": {
+                "type": "plain_text",
+                "text": "Arlington Asset Investment Corp - AAIC-PB"
+            },
+            "value": "AAIC-PB"
+        }
+    ]
+}

@@ -7,15 +7,36 @@ import pprint
 new_json = {}
 new_json['options'] = []
 
-with open('nyse_sample.json') as in_file:
-	source_data = json.load(in_file)
-	for s in source_data:
+with open('data/premium/stocks/raw/nyse.json') as nyse_file:
+	nyse_data = json.load(nyse_file)
+	for s in nyse_data:
 		new_json['options'].append({
 		"text": {
 			"type": "plain_text",
-			"text": s['Name']
-		}
+			"text": f"{s['Name']} - {s['Code']}",
+			"exchange": s["Exchange"]
+		},
+		"value": s["Code"]
 })
 
-with open('new_file.json', 'w') as outfile:
-	json.dump(new_json, outfile, indent=4)
+with open('data/premium/stocks/raw/nasdaq.json') as nasdaq_file:
+	nasdaq_data = json.load(nasdaq_file)
+	for s in nasdaq_data:
+		new_json['options'].append({
+		"text": {
+			"type": "plain_text",
+			"text": f"{s['Name']} - {s['Code']}",
+			"exchange": s["Exchange"]
+		},
+		"value": s["Code"]
+})
+
+# with open('nyse_nasdaq_out.json', 'w') as outfile:
+# 	json.dump(new_json, outfile, indent=4)
+	# json.dump(new_json, outfile)
+
+
+print('NYSE DATA COUNT', len(nyse_data))
+print('NASDAQ DATA COUNT', len(nasdaq_data))
+print(len(new_json['options']))
+	
