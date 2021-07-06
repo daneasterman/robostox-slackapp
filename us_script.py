@@ -23,8 +23,7 @@ with open('data/premium/stocks/raw/nasdaq.json') as nasdaq_file:
 		new_json['options'].append({
 		"text": {
 			"type": "plain_text",
-			"text": f"{s['Name']} - {s['Code']}",
-			"exchange": s["Exchange"]
+			"text": f"{s['Name']} - {s['Code']}",			
 		},
 		"value": s["Code"]
 })
