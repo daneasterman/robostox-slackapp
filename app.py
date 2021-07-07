@@ -14,6 +14,7 @@ from multiple_select_menu import static_menu_content
 from dotenv import load_dotenv
 load_dotenv()
 
+# Heroku config variables set:
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
 
