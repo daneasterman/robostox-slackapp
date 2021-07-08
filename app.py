@@ -87,7 +87,8 @@ def ticker_data():
 		py_data = json.load(tickers_file)
 		return jsonify(py_data)
 
-
-# Works when running python app.py:
-if __name__ == "__main__":
-	flask_app.run(debug=True, port=3000)
+# @flask_app.route('/tickers', methods=['GET', 'POST'])
+# def ticker_data():
+# 	with open('data/premium/stocks/prod/subset.json') as tickers_file:
+# 		py_data = json.load(tickers_file)
+# 		return jsonify(py_data)
