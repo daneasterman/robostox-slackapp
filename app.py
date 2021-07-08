@@ -1,4 +1,5 @@
 import os
+import json
 import yfinance as yf
 from numerize import numerize
 from datetime import datetime, time, timedelta
@@ -6,11 +7,12 @@ from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
 
 from generate_stock import generate_stock_info
-from multiple_select_menu import static_menu_content
+from multi_external_select import multi_external_select
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -32,13 +34,13 @@ def update_home_tab(client, event, logger):
       view={
         "type": "home",
         "callback_id": "home_view",
-				"blocks": static_menu_content
+				"blocks": multi_external_select
       }
     )  
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@app.action("ticker_select")
+@app.action("external_ticker_select")
 def ack_ticker_select(ack, body, client, action):
 	ack()	
 	print(body)
@@ -71,9 +73,21 @@ def run_stock_command(ack, say, command, logger):
 
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
+# For static images:
 flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
 
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
-    return handler.handle(request)
+	return handler.handle(request)
+
+@flask_app.route('/tickers', methods=['GET', 'POST'])
+def ticker_data():
+	with open('data/premium/stocks/prod/nyse_nasdaq.json') as tickers_file:
+		py_data = json.load(tickers_file)
+		return jsonify(py_data)
+
+
+# Works when running python app.py:
+if __name__ == "__main__":
+	flask_app.run(debug=True, port=3000)
