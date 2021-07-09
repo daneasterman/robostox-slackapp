@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
 
 from generate_stock import generate_stock_info
-from multi_external_select import multi_external_select
+from python_data.menus import multi_internal_select, multi_external_select
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -40,8 +40,8 @@ def update_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@app.action("external_ticker_select")
-def ack_ticker_select(ack, body, client, action):
+@app.action("ticker_select")
+def ack_ticker_select(ack, body, action):
 	ack()	
 	print(body)
 
@@ -73,9 +73,7 @@ def run_stock_command(ack, say, command, logger):
 
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
-# For static images:
 flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
-
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
@@ -87,8 +85,6 @@ def ticker_data():
 		py_data = json.load(tickers_file)
 		return jsonify(py_data)
 
-# @flask_app.route('/tickers', methods=['GET', 'POST'])
-# def ticker_data():
-# 	with open('data/premium/stocks/prod/subset.json') as tickers_file:
-# 		py_data = json.load(tickers_file)
-# 		return jsonify(py_data)
+# if __name__ == "__main__":
+# 	app.start(port=int(os.environ.get("PORT", 3000)))
+
