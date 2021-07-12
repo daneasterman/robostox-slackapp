@@ -16,8 +16,7 @@ def generate_stock_info(symbol):
 	stock = yf.Ticker(symbol)
 	
 	previous_close = stock.info['previousClose']
-	current_price = stock.info['regularMarketPrice']
-	asdf = "asdf"
+	current_price = stock.info['regularMarketPrice']	
 
 	raw_marketcap = stock.info['marketCap']
 	marketcap = numerize.numerize(raw_marketcap, 2)
@@ -25,7 +24,7 @@ def generate_stock_info(symbol):
 	volume = numerize.numerize(raw_volume, 2)
 	logo = stock.info['logo_url']
 	is_valid_image = check_valid_image(logo)
-
+		
 	stock_data = {
 			'symbol': stock.info['symbol'],
 			'long_name': stock.info['longName'],

@@ -1,6 +1,6 @@
 from python_data.local_tickers import local_tickers
 
-static_menu_content = [{
+multi_internal_select = [{
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
