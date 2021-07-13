@@ -1,5 +1,6 @@
 import os
 import json
+import pprint
 from datetime import datetime, time, timedelta
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -40,9 +41,17 @@ def update_home_tab(client, event, logger):
     logger.error(f"HOME TAB ERROR: {e}")
 
 @app.action("ticker_select")
-def ack_ticker_select(ack, body, action):
-	ack()	
-	print(body)
+def ack_ticker_select(ack, action):	
+	ack()
+	user_selected_list = []
+	selected_options = action['selected_options']
+	for s in selected_options:
+		user_selected_list.append(s['value'])
+	print(user_selected_list)
+
+# weekly_update function
+	# update on selected stocks
+	# checks notification api
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
@@ -62,12 +71,10 @@ def run_stock_command(ack, say, command, logger):
 			text=plain_error_text,
 			blocks=rich_error_text
 		)
-	except Exception as e:		
+	except Exception as e:
 		say(
 			text=generic_error_text
-		)
-	# TO DO: Test how this appears in Heroku Logs, is it expressive?
-	# logger.error(f"COMMAND ERROR: {e}")
+		)	
 
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
@@ -76,4 +83,3 @@ flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
 	return handler.handle(request)
-
