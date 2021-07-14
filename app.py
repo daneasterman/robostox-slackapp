@@ -9,7 +9,7 @@ from slack_sdk.errors import SlackApiError
 from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
 
-from generate_stock import generate_stock_info
+from generate_single import generate_stock_info
 from python_data.menus import multi_internal_select
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
@@ -43,15 +43,43 @@ def update_home_tab(client, event, logger):
 @app.action("ticker_select")
 def ack_ticker_select(ack, action):	
 	ack()
-	user_selected_list = []
+	user_symbols = []
 	selected_options = action['selected_options']
 	for s in selected_options:
-		user_selected_list.append(s['value'])
-	print(user_selected_list)
+		user_symbols.append(s['value'])
+	# get_multiple_stocks(user_selected_list)	
 
-# weekly_update function
-	# update on selected stocks
-	# checks notification api
+# client = WebClient(SLACK_BOT_TOKEN)
+# def get_convo_id():		
+#     channel_name = "test-alerts" # temporary
+#     convo_id = None
+#     try:
+#         for result in client.conversations_list():
+#             if convo_id is not None:
+#                 break
+#             for channel in result["channels"]:
+#                 if channel["name"] == channel_name:
+#                     convo_id = channel["id"]                    
+#                     return convo_id
+#     except SlackApiError as e:
+#         print(f"Error: {e}")
+
+
+# def publish_message():
+#     convo_id = get_convo_id()    
+#     # multiple_content = render_multiple_content()
+#     try:    
+#         result = client.chat_postMessage(
+#             channel=convo_id,
+#             text=f"Here's your update for {stock_data['long_name']}",
+#             blocks=multiple_content
+#         )
+#         print(result)
+
+#     except SlackApiError as e:
+#         print(f"Error: {e}")
+
+# publish_message()
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
