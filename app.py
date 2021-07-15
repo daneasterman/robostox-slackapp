@@ -1,6 +1,6 @@
 import os
 import json
-import pprint
+import yfinance as yf
 from datetime import datetime, time, timedelta
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -9,7 +9,9 @@ from slack_sdk.errors import SlackApiError
 from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
 
-from generate_single import generate_stock_info
+from generate_single import generate_stock_info, get_period_percent_change
+from generate_multiple import get_multiple_stocks
+
 from python_data.menus import multi_internal_select
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
@@ -43,43 +45,73 @@ def update_home_tab(client, event, logger):
 @app.action("ticker_select")
 def ack_ticker_select(ack, action):	
 	ack()
-	user_symbols = []
+	tickers = []
+	stocks_list =[]
 	selected_options = action['selected_options']
 	for s in selected_options:
-		user_symbols.append(s['value'])
-	# get_multiple_stocks(user_selected_list)	
-
-# client = WebClient(SLACK_BOT_TOKEN)
-# def get_convo_id():		
-#     channel_name = "test-alerts" # temporary
-#     convo_id = None
-#     try:
-#         for result in client.conversations_list():
-#             if convo_id is not None:
-#                 break
-#             for channel in result["channels"]:
-#                 if channel["name"] == channel_name:
-#                     convo_id = channel["id"]                    
-#                     return convo_id
-#     except SlackApiError as e:
-#         print(f"Error: {e}")
+		tickers.append(s['value'])
+	for t in tickers:
+		stock = yf.Ticker(t)
+		stock_dict = {
+			'long_name': stock.info['longName'],
+			'week_percent_change': round(get_period_percent_change(stock, "5d"), 2)
+			}
+		stocks_list.append(stock_dict)	
+	publish_message(stocks_list)
 
 
-# def publish_message():
-#     convo_id = get_convo_id()    
-#     # multiple_content = render_multiple_content()
-#     try:    
-#         result = client.chat_postMessage(
-#             channel=convo_id,
-#             text=f"Here's your update for {stock_data['long_name']}",
-#             blocks=multiple_content
-#         )
-#         print(result)
+client = WebClient(SLACK_BOT_TOKEN)
 
-#     except SlackApiError as e:
-#         print(f"Error: {e}")
+def publish_message(stocks_list):
+	convo_id = get_convo_id()
 
-# publish_message()
+	blocks = []
+	intro = {
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "*Happy Friday!* :tada: Here's your weekly portfolio update:"
+		}
+	}
+	blocks.append(intro)
+	top_divider = {"type": "divider"}
+	blocks.append(top_divider)
+
+	for s in stocks_list:
+		main_info = {
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",			
+				"text": f"*{s['long_name']}* is trading at "
+			},
+		}
+		blocks.append(main_info)
+	
+	bottom_divider = {"type": "divider"}
+	blocks.append(bottom_divider)
+	
+	try:
+		client.chat_postMessage(
+			channel=convo_id,
+			text="Happy Friday! :tada: Here's your weekly portfolio update:",
+			blocks=blocks
+    )		
+	except SlackApiError as e:
+		print(f"Error: {e}")
+
+def get_convo_id():		
+    channel_name = "test-alerts" # temporary
+    convo_id = None
+    try:
+        for result in client.conversations_list():
+            if convo_id is not None:
+                break
+            for channel in result["channels"]:
+                if channel["name"] == channel_name:
+                    convo_id = channel["id"]                    
+                    return convo_id
+    except SlackApiError as e:
+        print(f"Error: {e}")
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	

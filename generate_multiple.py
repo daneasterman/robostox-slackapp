@@ -1,4 +1,5 @@
 import yfinance as yf
+# from app import ack_ticker_select
 from generate_single import get_period_percent_change
 
 def get_multiple_stocks(tickers):
@@ -8,10 +9,16 @@ def get_multiple_stocks(tickers):
 		stock_dict = {
 			'long_name': stock.info['longName'],
 			'week_percent_change': round(get_period_percent_change(stock, "5d"), 2)
-		}
+			}
 		stocks_list.append(stock_dict)
-	return stocks_list
+	print(stocks_list)
 
-# def render_multiple_content()
-	# calls the above function
-	# Gets run in publish message
+	for s in stocks_list:
+		text = f"This is your stock: {s['long_name']}"
+	return text
+
+
+
+	
+
+	# This gets run in publish message

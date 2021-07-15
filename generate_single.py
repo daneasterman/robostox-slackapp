@@ -42,7 +42,7 @@ def generate_stock_info(symbol):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"Here's the latest information for {stock_data['long_name']}"
+			"text": f"Here's the latest information for *{stock_data['long_name']}:*"
 		}
 	},
 	{"type": "divider"},

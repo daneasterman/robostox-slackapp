@@ -1,5 +1,5 @@
-client = WebClient(SLACK_BOT_TOKEN)
-def get_convo_id():
+	client = WebClient(SLACK_BOT_TOKEN)
+	def get_convo_id():		
     channel_name = "test-alerts"
     convo_id = None
     try:
@@ -30,5 +30,5 @@ def publish_message():
     except SlackApiError as e:
         print(f"Error: {e}")
 
-# Need to call function:
+# Call function:
 publish_message()
