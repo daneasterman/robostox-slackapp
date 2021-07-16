@@ -49,25 +49,27 @@ def ack_ticker_select(ack, action):
 	stocks_list =[]
 	selected_options = action['selected_options']
 	for s in selected_options:
-		tickers.append(s['value'])
+		tickers.append(s['value'])	
+	# week_change = 0
 	for t in tickers:
 		stock = yf.Ticker(t)
 		week_change = round(get_period_percent_change(stock, "5d"), 2)
-		# TO DO FORCE 0 HERE
+		current_price = stock.info['regularMarketPrice']
 		stock_dict = {
 			'long_name': stock.info['longName'],
-			'week_change': None if week_change == 0 else week_change
+			'current_price': round(current_price, 2),
+			'week_change': "" if week_change == 0 else week_change
 			}
-		stocks_list.append(stock_dict)	
+		stocks_list.append(stock_dict)		
 	publish_message(stocks_list)
 
 def natural_lang(percent):
-	if percent > 0:
-		return "up"
-	elif percent < 0:
-		return "down"
-	elif percent == 0:
+	if percent == "":
 		return "is unchanged"
+	elif percent > 0:
+		return "up "
+	elif percent < 0:
+		return "down "
 
 client = WebClient(SLACK_BOT_TOKEN)
 def publish_message(stocks_list):
@@ -78,19 +80,19 @@ def publish_message(stocks_list):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*Happy Friday!*  :tada:  Here's your weekly portfolio update:"
+			"text": "*Happy Friday!*  :tada:  Here's your weekly portfolio update :chart_with_upwards_trend:"
 		}
 	}
 	blocks.append(intro)
 	top_divider = {"type": "divider"}
 	blocks.append(top_divider)
 
-	for s in stocks_list:		
+	for s in stocks_list:
 		main_info = {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",			
-				"text": f"*{s['long_name']}* is trading at `blah` and {natural_lang(s['week_change'])} {s['week_change']} for the week."
+				"text": f"*{s['long_name']}* is trading at `${s['current_price']}` and is *{natural_lang(s['week_change'])}*`{s['week_change']}%` for the week."
 			},
 		}		
 		blocks.append(main_info)
