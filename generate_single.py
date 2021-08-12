@@ -29,7 +29,7 @@ def generate_stock_info(symbol):
 			'symbol': stock.info['symbol'],
 			'long_name': stock.info['longName'],
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
-			'current_price': current_price,
+			'current_price': round(current_price, 2),
 			'marketcap': marketcap,
 			'volume': volume,
 			'day_percent_change': round(percent_change(previous_close, current_price), 2),
