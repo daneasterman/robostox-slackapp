@@ -10,7 +10,6 @@ from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
 
 from generate_single import generate_stock_info, get_period_percent_change
-from generate_multiple import get_multiple_stocks
 
 from python_data.menus import multi_internal_select
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
@@ -46,11 +45,14 @@ def update_home_tab(client, event, logger):
 def ack_ticker_select(ack, action):	
 	ack()
 	tickers = []
+	cik_codes = []
 	stocks_list =[]
-	selected_options = action['selected_options']
+	selected_options = action['selected_options']	
 	for s in selected_options:
-		tickers.append(s['value'])	
-	# week_change = 0
+		split_value = s['value'].split()
+		tickers.append(split_value[0])
+		cik_codes.append(split_value[2])
+	
 	for t in tickers:
 		stock = yf.Ticker(t)
 		week_change = round(get_period_percent_change(stock, "5d"), 2)
