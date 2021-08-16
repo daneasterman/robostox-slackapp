@@ -101,7 +101,7 @@ def publish_message(stocks_list):
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": f"*{s['long_name']}* is trading at `${s['current_price']}` and is *{natural_lang(week_change)}* {show_percent(week_change)} for the week."
+				"text": f"*{s['long_name']}* is trading at `${s['current_price']}` and is *{natural_lang(week_change)}* {show_percent(week_change)}for the week."
 			},
 		}		
 		blocks.append(main_info)
