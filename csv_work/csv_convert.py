@@ -12,7 +12,7 @@ with open('csv_work/cik_tickers.csv', encoding='utf-8') as csvfile:
 				"type": "plain_text",				
 			},
 			"value": f"{row['Ticker']} - {row['CIK']}"
-		}		
+		}
 		json_array.append(full_obj)
 		
 	# print(json_array[20])

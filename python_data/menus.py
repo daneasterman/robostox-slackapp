@@ -4,7 +4,7 @@ multi_internal_select = [{
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*REFECTORED DIFFERENT FILE TEST: Select which stocks you would like to receive notifications for:*"
+			"text": "Select which stocks you would like to receive notifications for:*"
 		},
 		"accessory": {
 			"action_id": "ticker_select",
