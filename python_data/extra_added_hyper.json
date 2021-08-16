@@ -1,0 +1,23 @@
+[
+	{ "text": { "text": "PayPal Holdings, Inc. - PYPL", "type": "plain_text" }, "value": "PYPL - 0001633917" },
+	{ "text": { "text": "Tencent Holdings Ltd - TCEHY", "type": "plain_text" }, "value": "TCEHY - 0001293451" },
+	{ "text": { "text": "Alibaba Group Holding Ltd - BABA", "type": "plain_text" }, "value": "BABA - 0001577552" },
+	{ "text": { "text": "Snap Inc - SNAP", "type": "plain_text" }, "value": "SNAP - 0001564408" },
+	{ "text": { "text": "Square, Inc. - SQ", "type": "plain_text" }, "value": "SQ - 0001512673" },
+	{ "text": { "text": "Zoom Video Communications, Inc. - ZM", "type": "plain_text" }, "value": "ZM - 0001585521" },
+	{ "text": { "text": "JD.com, Inc. - JD", "type": "plain_text" }, "value": "JD - 0001549802" },
+	{ "text": { "text": "Airbnb, Inc. - ABNB", "type": "plain_text" }, "value": "ABNB - 0001559720" },
+	{ "text": { "text": "Snowflake Inc. - SNOW", "type": "plain_text" }, "value": "SNOW - 0001640147" },
+	{ "text": { "text": "Uber Technologies, Inc - UBER", "type": "plain_text" }, "value": "UBER - 0001543151" },
+	{ "text": { "text": "Lyft, Inc. - LYFT", "type": "plain_text" }, "value": "LYFT - 0001759509" },
+	{ "text": { "text": "TWILIO INC - TWLO", "type": "plain_text" }, "value": "TWLO - 0001447669" },
+	{ "text": { "text": "DoorDash, Inc. - DASH", "type": "plain_text" }, "value": "DASH - 0001792789" },
+	{ "text": { "text": "DOCUSIGN, INC. - DOCU", "type": "plain_text" }, "value": "DOCU - 0001261333" },
+	{ "text": { "text": "Roblox Corp - RBLX", "type": "plain_text" }, "value": "RBLX - 0001315098" },
+	{ "text": { "text": "Palantir Technologies Inc. - PLTR", "type": "plain_text" }, "value": "PLTR - 0001321655" },
+	{ "text": { "text": "Robinhood Markets, Inc. - HOOD", "type": "plain_text" }, "value": "HOOD - 0001783879" },
+	{ "text": { "text": "PELOTON INTERACTIVE, INC. - PTON", "type": "plain_text" }, "value": "PTON - 0001639825" },
+	{ "text": { "text": "Wix.com Ltd. - WIX", "type": "plain_text" }, "value": "WIX - 0001576789" },
+	{ "text": { "text": "XPENG INC. - XPEV", "type": "plain_text" }, "value": "XPEV - 0001810997" },
+	{ "text": { "text": "Virgin Galactic Holdings, Inc - SPCE", "type": "plain_text" }, "value": "SPCE - 0001706946" }
+]
