@@ -1,6 +1,8 @@
+from requests.api import options
 from python_data.local_tickers import local_tickers
 
-multi_internal_select = [{
+multi_internal_select = [
+  {
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
@@ -14,7 +16,7 @@ multi_internal_select = [{
 				"text": "Select Stocks"
 			},
 			"options": local_tickers
-	}
+	},
 }]
 
 multi_external_select = [{

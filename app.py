@@ -41,6 +41,8 @@ def update_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
+# OPEN THE LISTENER? -> NEED HANDLER TO OPEN / CLOSE LISTENER - SUB TO EVERYTHING.
+
 @app.action("ticker_select")
 def ack_ticker_select(ack, action):	
 	ack()
@@ -79,6 +81,7 @@ def show_percent(week_change):
 	else:		
 		return f"`{week_change}%` "
 
+# This will change to scheduler in prod:
 client = WebClient(SLACK_BOT_TOKEN)
 def publish_message(stocks_list):
 	convo_id = get_convo_id()
