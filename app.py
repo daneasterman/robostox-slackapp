@@ -12,6 +12,8 @@ from whitenoise import WhiteNoise
 from generate_single import generate_stock_info, get_period_percent_change
 
 from python_data.menus import multi_internal_select
+from python_data.home_screen import home_screen
+
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
 from dotenv import load_dotenv
@@ -35,13 +37,12 @@ def update_home_tab(client, event, logger):
       view={
         "type": "home",
         "callback_id": "home_view",
-				"blocks": multi_internal_select
+				"blocks": home_screen
       }
     )  
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-# OPEN THE LISTENER? -> NEED HANDLER TO OPEN / CLOSE LISTENER - SUB TO EVERYTHING.
 
 @app.action("ticker_select")
 def ack_ticker_select(ack, action):	
