@@ -28,19 +28,19 @@ modal = [
 			},			
 		},
 		{
-      "type": "section",
-      "text": {
-        "type": "mrkdwn",
-        "text": "Select stocks to receive notifications *(Max 10)*:\n\n"
-      },
-      "accessory": {
-        "action_id": "ticker_select",
-        "type": "multi_static_select",
-        "placeholder": {
-          "type": "plain_text",
-          "text": "Apple, Tesla etc"
-        },
-        "options": local_tickers
-    },
-  }
-]
+			"label": {
+				"type": "plain_text",
+				"text": "Please choose your notification options:\n\n\n\n"
+			},
+			"type": "input",
+			"element": {
+				"action_id": "ticker_select",
+				"type": "multi_static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Apple, Tesla, Amazon etc."
+				},
+				"options": local_tickers
+				}
+			}
+	]	
