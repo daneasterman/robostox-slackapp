@@ -40,7 +40,7 @@ home_screen = [
 					"text": "Launch Modal",
 				},
 				"value": "click_me_123",
-				"action_id": "actionId-0"
+				"action_id": "launch_modal_btn"
 			}
 		]
 	}

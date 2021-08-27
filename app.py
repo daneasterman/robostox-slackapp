@@ -13,6 +13,7 @@ from generate_single import generate_stock_info, get_period_percent_change
 
 from python_data.menus import multi_internal_select
 from python_data.home_screen import home_screen
+from python_data.modal import modal
 
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
@@ -30,7 +31,7 @@ app = App(
 )
 
 @app.event("app_home_opened")
-def update_home_tab(client, event, logger):
+def display_home_tab(client, event, logger):
   try:    
     client.views_publish(      
       user_id=event["user"],
@@ -43,9 +44,26 @@ def update_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
+@app.action("launch_modal_btn")
+def launch_modal(ack, body, client, logger):
+	ack()
+	try: 
+		client.views_open(
+			trigger_id=body["trigger_id"],
+			view={
+				"type": "modal",
+				"callback_id": "modal_view",
+				"title": {"text": "Your Robostox Setup", "type": "plain_text"},
+				"submit": {"text": "Submit", "type": "plain_text"},
+				"blocks": modal
+			}
+		)
+	except Exception as e:
+		logger.error(f"MODAL ERROR: {e}")	
+
 
 @app.action("ticker_select")
-def ack_ticker_select(ack, action):	
+def ticker_select(ack, action):
 	ack()
 	tickers = []
 	cik_codes = []
@@ -120,7 +138,7 @@ def publish_message(stocks_list):
 			blocks=blocks
     )		
 	except SlackApiError as e:
-		print(f"Error: {e}")
+		print(f"PUBLISH MSG ERROR: {e}")
 
 def get_convo_id():		
     channel_name = "test-alerts" # temporary

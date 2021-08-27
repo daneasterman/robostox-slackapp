@@ -1,4 +1,4 @@
-from requests.api import options
+# from requests.api import options # not in use for now.
 from python_data.local_tickers import local_tickers
 
 multi_internal_select = [
