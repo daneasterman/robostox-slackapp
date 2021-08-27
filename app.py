@@ -84,7 +84,7 @@ def ticker_select(ack, action):
 			'week_change': 0 if week_change == 0 else week_change
 			}
 		stocks_list.append(stock_dict)		
-	publish_message(stocks_list)
+	# publish_message(stocks_list)
 
 def natural_lang(percent):
 	if percent == 0:

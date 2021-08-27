@@ -1,41 +1,46 @@
+from python_data.local_tickers import local_tickers
+
 modal = [
-	{
-		"type": "input",
-		"element": {
-			"type": "plain_text_input",
-			"action_id": "sl_input",
-			"placeholder": {
-				"type": "plain_text",
-				"text": "Placeholder text for single-line input"
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Hello, Assistant to the Regional Manager Dwight! Here are a few Robostox settings.\n\n"
 			}
 		},
-		"label": {
-			"type": "plain_text",
-			"text": "Label"
-		},
-		"hint": {
-			"type": "plain_text",
-			"text": "Hint text"
-		}
-	},
-	{
-		"type": "input",
-		"element": {
-			"type": "plain_text_input",
-			"action_id": "ml_input",
-			"multiline": True,
-			"placeholder": {
+		{
+			"label": {
 				"type": "plain_text",
-				"text": "Placeholder text for multi-line input"
-			}
+				"text": "Please choose your notification options:"
+			},
+			"type": "input",
+			"element": {
+				"type": "checkboxes",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Toggle realtime on / off"
+						},
+						"value": "realtime_on"
+					},
+				]
+			},			
 		},
-		"label": {
-			"type": "plain_text",
-			"text": "Label"
-		},
-		"hint": {
-			"type": "plain_text",
-			"text": "Hint text"
-		}
-	}
+		{
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "Select stocks to receive notifications *(Max 10)*:\n\n"
+      },
+      "accessory": {
+        "action_id": "ticker_select",
+        "type": "multi_static_select",
+        "placeholder": {
+          "type": "plain_text",
+          "text": "Apple, Tesla etc"
+        },
+        "options": local_tickers
+    },
+  }
 ]
