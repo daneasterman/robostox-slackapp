@@ -32,7 +32,7 @@ app = App(
 
 @app.event("app_home_opened")
 def display_home_tab(client, event, logger):
-  try:    
+  try:
     client.views_publish(      
       user_id=event["user"],
       view={
@@ -52,6 +52,7 @@ def launch_modal(ack, body, client, logger):
 			trigger_id=body["trigger_id"],
 			view={
 				"type": "modal",
+				# Callback id used to trigger view submission action:
 				"callback_id": "modal_view",
 				"title": {"text": "Your Robostox Setup", "type": "plain_text"},
 				"submit": {"text": "Submit", "type": "plain_text"},
@@ -59,9 +60,10 @@ def launch_modal(ack, body, client, logger):
 			}
 		)
 	except Exception as e:
-		logger.error(f"MODAL ERROR: {e}")	
+		logger.error(f"MODAL ERROR: {e}")
 
 
+# THIS WILL NEED SOME REFACTOR:
 @app.action("ticker_select")
 def ticker_select(ack, action):
 	ack()
@@ -70,7 +72,7 @@ def ticker_select(ack, action):
 	stocks_list =[]
 	selected_options = action['selected_options']	
 	for s in selected_options:
-		split_value = s['value'].split()
+		split_value = s['value'].split()	
 		tickers.append(split_value[0])
 		cik_codes.append(split_value[2])
 	

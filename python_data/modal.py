@@ -3,6 +3,7 @@ from python_data.local_tickers import local_tickers
 modal = [
 		{
 			"type": "section",
+			"block_id": "stocks-modal",
 			"text": {
 				"type": "mrkdwn",
 				"text": "Hello, Assistant to the Regional Manager Dwight! Here are a few Robostox settings.\n\n"
@@ -15,7 +16,8 @@ modal = [
 			},
 			"type": "input",
 			"element": {
-				"type": "checkboxes",
+				"action_id": "toggle_realtime",
+				"type": "checkboxes",				
 				"options": [
 					{
 						"text": {
@@ -30,7 +32,7 @@ modal = [
 		{
 			"label": {
 				"type": "plain_text",
-				"text": "Please choose your notification options:\n\n\n\n"
+				"text": "Please choose your notification options:\n\n"
 			},
 			"type": "input",
 			"element": {
