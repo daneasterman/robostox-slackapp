@@ -17,17 +17,31 @@ modal = [
 			"type": "input",
 			"element": {
 				"action_id": "toggle_realtime",
-				"type": "checkboxes",				
+				"type": "radio_buttons",
+				"initial_option": {
+					"value": "REALTIME_OFF",
+					"text": {
+						"type": "plain_text",
+						"text": "Off"
+					}
+				},
 				"options": [
 					{
+						"value": "REALTIME_OFF",
 						"text": {
 							"type": "plain_text",
-							"text": "Toggle realtime on / off"
-						},
-						"value": "realtime_on"
+							"text": "Off"
+						}
 					},
+					{
+						"value": "REALTIME_ON",
+						"text": {
+							"type": "plain_text",
+							"text": "On"
+						}
+					}					
 				]
-			},			
+			},
 		},
 		{
 			"label": {

@@ -62,6 +62,12 @@ def launch_modal(ack, body, client, logger):
 	except Exception as e:
 		logger.error(f"MODAL ERROR: {e}")
 
+@app.view("modal_view")
+def handle_modal_submit(ack, body, client, view, logger):
+	state_data = view["state"]
+	ack()
+	# breakpoint()
+	user = body["user"]["id"]	
 
 # THIS WILL NEED SOME REFACTOR:
 @app.action("ticker_select")
