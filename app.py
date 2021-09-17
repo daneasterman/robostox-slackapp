@@ -8,13 +8,14 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from flask import Flask, request, jsonify
 from whitenoise import WhiteNoise
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 from generate_single import generate_stock_info, get_period_percent_change
-
 from python_data.menus import multi_internal_select
 from python_data.home_screen import home_screen
 from python_data.modal import modal
-
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
 from dotenv import load_dotenv
@@ -23,6 +24,10 @@ load_dotenv()
 # Heroku automatically pulls the variables from this:
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
+
+cred = credentials.Certificate('firestore-sdk.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 # Start Slack App
 app = App(
@@ -33,7 +38,7 @@ app = App(
 @app.event("app_home_opened")
 def display_home_tab(client, event, logger):
   try:
-    client.views_publish(      
+    client.views_publish(
       user_id=event["user"],
       view={
         "type": "home",
@@ -64,10 +69,20 @@ def launch_modal(ack, body, client, logger):
 
 @app.view("modal_view")
 def handle_modal_submit(ack, body, client, view, logger):
-	state_data = view["state"]
+	state_values = view["state"]["values"]
+	radio_choice = state_values["radio_input"]["toggle_realtime"]["selected_option"]["value"]
+	# Pass this into old ticker select func:
+	multi_select_options = state_values["multi_select_input"]["ticker_select"]["selected_options"]
+	# if radio_choice == "REALTIME_ON":
+		# switch on firebase		
+
+	# REFACTOR TO LSIT COMP:
+	# for opt in multi_select_options:
+	# 	print("VALUE", opt["value"])
+	# user = body["user"]["id"]
 	ack()
 	# breakpoint()
-	user = body["user"]["id"]	
+	
 
 # THIS WILL NEED SOME REFACTOR:
 @app.action("ticker_select")
