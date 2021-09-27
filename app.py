@@ -1,5 +1,6 @@
 import os
 import json
+import threading
 import yfinance as yf
 from datetime import datetime, time, timedelta
 from slack_bolt import App
@@ -16,6 +17,7 @@ from generate_single import generate_stock_info, get_period_percent_change
 from python_data.menus import multi_internal_select
 from python_data.home_screen import home_screen
 from python_data.modal import modal
+from python_data.local_tickers import local_tickers
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
 from dotenv import load_dotenv
@@ -50,8 +52,8 @@ def display_home_tab(client, event, logger):
     logger.error(f"HOME TAB ERROR: {e}")
 
 @app.action("launch_modal_btn")
-def launch_modal(ack, body, client, logger):
-	ack()
+def launch_modal(ack, body, client, view, logger):
+	ack()	
 	try: 
 		client.views_open(
 			trigger_id=body["trigger_id"],
@@ -67,22 +69,39 @@ def launch_modal(ack, body, client, logger):
 	except Exception as e:
 		logger.error(f"MODAL ERROR: {e}")
 
+callback_done = threading.Event()
+def on_snapshot(doc_snapshot, changes, read_time):
+    for doc in doc_snapshot:
+        print(f'Received document snapshot: {doc.id}')
+    callback_done.set()
+
+# Change this to a button handler.
 @app.view("modal_view")
 def handle_modal_submit(ack, body, client, view, logger):
+	user = body["user"]["id"]
 	state_values = view["state"]["values"]
-	radio_choice = state_values["radio_input"]["toggle_realtime"]["selected_option"]["value"]
+	radio_choice = state_values["realtime_radio_input"]["toggle_realtime"]["selected_option"]["value"]
 	# Pass this into old ticker select func:
 	multi_select_options = state_values["multi_select_input"]["ticker_select"]["selected_options"]
+	ack()	
+	# doc_watch = None
 	# if radio_choice == "REALTIME_ON":
-		# switch on firebase		
+	# 	print("**REALTIME SWITCHED ON!**")
+		# entries_ref = db.collection("entries")
+		# latest_doc = entries_ref.limit(1)
+		# doc_watch = latest_doc.on_snapshot(on_snapshot)
+	# else:
+	# 	doc_watch.unsubscribe()
+	msg = ""
+	try:
+		 msg = "Awesome! :white_check_mark: Your notification settings have now been saved.\n\nYou can change this at any time, you just need but re-enter these settings when you open the modal window again."
+	except:
+		msg = "Something went wrong, your settings were not saved. Please contact: daniel.easterman@gmail.com if the problem persists."
+	try:
+		client.chat_postMessage(channel=user, text=msg)
+	except Exception as e:
+		logger.exception(f"Failed to post a message: {e}")
 
-	# REFACTOR TO LSIT COMP:
-	# for opt in multi_select_options:
-	# 	print("VALUE", opt["value"])
-	# user = body["user"]["id"]
-	ack()
-	# breakpoint()
-	
 
 # THIS WILL NEED SOME REFACTOR:
 @app.action("ticker_select")
@@ -106,8 +125,8 @@ def ticker_select(ack, action):
 			'current_price': round(current_price, 2),
 			'week_change': 0 if week_change == 0 else week_change
 			}
-		stocks_list.append(stock_dict)		
-	# publish_message(stocks_list)
+		stocks_list.append(stock_dict)
+	# publish_scheduled_message(stocks_list)
 
 def natural_lang(percent):
 	if percent == 0:
@@ -125,7 +144,7 @@ def show_percent(week_change):
 
 # This will change to scheduler in prod:
 client = WebClient(SLACK_BOT_TOKEN)
-def publish_message(stocks_list):
+def publish_scheduled_message(stocks_list, logger):
 	convo_id = get_convo_id()
 
 	blocks = []
@@ -161,9 +180,9 @@ def publish_message(stocks_list):
 			blocks=blocks
     )		
 	except SlackApiError as e:
-		print(f"PUBLISH MSG ERROR: {e}")
+		logger(f"PUBLISH_SCHEDULED_MSG ERROR: {e}")
 
-def get_convo_id():		
+def get_convo_id(logger):		
     channel_name = "test-alerts" # temporary
     convo_id = None
     try:
@@ -175,7 +194,7 @@ def get_convo_id():
                     convo_id = channel["id"]                    
                     return convo_id
     except SlackApiError as e:
-        print(f"Error: {e}")
+        logger(f"GET_CONVO_ID Error: {e}")
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
