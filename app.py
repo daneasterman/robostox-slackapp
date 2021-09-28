@@ -13,11 +13,10 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-from generate_single import generate_stock_info, get_period_percent_change
+from features.stock_command.generate_single import generate_stock_info, get_period_percent_change
 from python_data.menus import multi_internal_select
 from python_data.home_screen import home_screen
 from python_data.modal import modal
-from python_data.local_tickers import local_tickers
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
 from dotenv import load_dotenv
@@ -38,7 +37,7 @@ app = App(
 )
 
 @app.event("app_home_opened")
-def display_home_tab(client, event, logger):
+def open_home_tab(client, event, logger):
   try:
     client.views_publish(
       user_id=event["user"],
@@ -52,7 +51,7 @@ def display_home_tab(client, event, logger):
     logger.error(f"HOME TAB ERROR: {e}")
 
 @app.action("launch_modal_btn")
-def launch_modal(ack, body, client, view, logger):
+def open_modal(ack, body, client, view, logger):
 	ack()	
 	try: 
 		client.views_open(
@@ -69,12 +68,6 @@ def launch_modal(ack, body, client, view, logger):
 	except Exception as e:
 		logger.error(f"MODAL ERROR: {e}")
 
-callback_done = threading.Event()
-def on_snapshot(doc_snapshot, changes, read_time):
-    for doc in doc_snapshot:
-        print(f'Received document snapshot: {doc.id}')
-    callback_done.set()
-
 # Change this to a button handler.
 @app.view("modal_view")
 def handle_modal_submit(ack, body, client, view, logger):
@@ -84,14 +77,13 @@ def handle_modal_submit(ack, body, client, view, logger):
 	# Pass this into old ticker select func:
 	multi_select_options = state_values["multi_select_input"]["ticker_select"]["selected_options"]
 	ack()	
-	# doc_watch = None
-	# if radio_choice == "REALTIME_ON":
-	# 	print("**REALTIME SWITCHED ON!**")
-		# entries_ref = db.collection("entries")
-		# latest_doc = entries_ref.limit(1)
-		# doc_watch = latest_doc.on_snapshot(on_snapshot)
-	# else:
-	# 	doc_watch.unsubscribe()
+	doc_watch = None
+	if radio_choice == "REALTIME_ON":		
+		entries_ref = db.collection("entries")
+		latest_doc = entries_ref.limit(1)
+		doc_watch = latest_doc.on_snapshot(on_snapshot)
+	else:
+		doc_watch.unsubscribe()
 	msg = ""
 	try:
 		 msg = "Awesome! :white_check_mark: Your notification settings have now been saved.\n\nYou can change this at any time, you just need but re-enter these settings when you open the modal window again."
@@ -102,99 +94,13 @@ def handle_modal_submit(ack, body, client, view, logger):
 	except Exception as e:
 		logger.exception(f"Failed to post a message: {e}")
 
+callback_done = threading.Event()
+def on_snapshot(doc_snapshot, changes, read_time):
+	for doc in doc_snapshot:
+		print(f'Received document snapshot: {doc.id}')
+		# Execute another function in here with data.
+	callback_done.set()
 
-# THIS WILL NEED SOME REFACTOR:
-@app.action("ticker_select")
-def ticker_select(ack, action):
-	ack()
-	tickers = []
-	cik_codes = []
-	stocks_list =[]
-	selected_options = action['selected_options']	
-	for s in selected_options:
-		split_value = s['value'].split()	
-		tickers.append(split_value[0])
-		cik_codes.append(split_value[2])
-	
-	for t in tickers:
-		stock = yf.Ticker(t)
-		week_change = round(get_period_percent_change(stock, "5d"), 2)
-		current_price = stock.info['regularMarketPrice']
-		stock_dict = {
-			'long_name': stock.info['longName'],
-			'current_price': round(current_price, 2),
-			'week_change': 0 if week_change == 0 else week_change
-			}
-		stocks_list.append(stock_dict)
-	# publish_scheduled_message(stocks_list)
-
-def natural_lang(percent):
-	if percent == 0:
-		return "unchanged"
-	elif percent > 0:
-		return "up"
-	elif percent < 0:
-		return "down"
-
-def show_percent(week_change):
-	if week_change == 0:
-		return ""
-	else:		
-		return f"`{week_change}%` "
-
-# This will change to scheduler in prod:
-client = WebClient(SLACK_BOT_TOKEN)
-def publish_scheduled_message(stocks_list, logger):
-	convo_id = get_convo_id()
-
-	blocks = []
-	intro = {
-		"type": "section",
-		"text": {
-			"type": "mrkdwn",
-			"text": "*Happy Friday!*  :tada:  Here's your weekly portfolio update :chart_with_upwards_trend:"
-		}
-	}
-	blocks.append(intro)
-	top_divider = {"type": "divider"}
-	blocks.append(top_divider)
-
-	for s in stocks_list:
-		week_change = s['week_change']		
-		main_info = {
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": f"*{s['long_name']}* is trading at `${s['current_price']}` and is *{natural_lang(week_change)}* {show_percent(week_change)}for the week."
-			},
-		}		
-		blocks.append(main_info)
-	
-	bottom_divider = {"type": "divider"}
-	blocks.append(bottom_divider)
-	
-	try:
-		client.chat_postMessage(
-			channel=convo_id,
-			text="Happy Friday! :tada: Here's your weekly portfolio update:",
-			blocks=blocks
-    )		
-	except SlackApiError as e:
-		logger(f"PUBLISH_SCHEDULED_MSG ERROR: {e}")
-
-def get_convo_id(logger):		
-    channel_name = "test-alerts" # temporary
-    convo_id = None
-    try:
-        for result in client.conversations_list():
-            if convo_id is not None:
-                break
-            for channel in result["channels"]:
-                if channel["name"] == channel_name:
-                    convo_id = channel["id"]                    
-                    return convo_id
-    except SlackApiError as e:
-        logger(f"GET_CONVO_ID Error: {e}")
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
@@ -202,7 +108,6 @@ def run_stock_command(ack, say, command, logger):
 	user_symbol = command['text']
 	plain_error_text = plain_api_error(user_symbol)
 	rich_error_text = rich_api_error(user_symbol)
-
 	try:
 		stock_data, stock_content = generate_stock_info(user_symbol)		
 		say(
