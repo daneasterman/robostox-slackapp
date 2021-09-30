@@ -13,9 +13,12 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+from features.common.get_convo_id import get_convo_id
 from features.stock_command.generate_single import generate_stock_info, get_period_percent_change
+from features.filing_alert.filing_content import generate_first_message, generate_main_filing_message 
+
 from python_data.menus import multi_internal_select
-from python_data.home_screen import home_screen
+from home_screen import home_screen
 from python_data.modal import modal
 from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
 
@@ -25,6 +28,7 @@ load_dotenv()
 # Heroku automatically pulls the variables from this:
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
+client = WebClient(SLACK_BOT_TOKEN)
 
 cred = credentials.Certificate('firestore-sdk.json')
 firebase_admin.initialize_app(cred)
@@ -68,38 +72,41 @@ def open_modal(ack, body, client, view, logger):
 	except Exception as e:
 		logger.error(f"MODAL ERROR: {e}")
 
-# Change this to a button handler.
 @app.view("modal_view")
 def handle_modal_submit(ack, body, client, view, logger):
-	user = body["user"]["id"]
+	global_user = body["user"]["id"]
 	state_values = view["state"]["values"]
 	radio_choice = state_values["realtime_radio_input"]["toggle_realtime"]["selected_option"]["value"]
 	# Pass this into old ticker select func:
 	multi_select_options = state_values["multi_select_input"]["ticker_select"]["selected_options"]
-	ack()	
-	doc_watch = None
-	if radio_choice == "REALTIME_ON":		
-		entries_ref = db.collection("entries")
-		latest_doc = entries_ref.limit(1)
-		doc_watch = latest_doc.on_snapshot(on_snapshot)
-	else:
-		doc_watch.unsubscribe()
-	msg = ""
-	try:
-		 msg = "Awesome! :white_check_mark: Your notification settings have now been saved.\n\nYou can change this at any time, you just need but re-enter these settings when you open the modal window again."
-	except:
-		msg = "Something went wrong, your settings were not saved. Please contact: daniel.easterman@gmail.com if the problem persists."
-	try:
-		client.chat_postMessage(channel=user, text=msg)
-	except Exception as e:
-		logger.exception(f"Failed to post a message: {e}")
+	ack()
+	entries_ref = db.collection("entries")	
+	latest_doc = entries_ref.limit(1)
+	if radio_choice == "REALTIME_ON":
+		latest_doc.on_snapshot(on_snapshot)
+	elif radio_choice == "REALTIME_OFF":
+		latest_doc.on_snapshot(on_snapshot).unsubscribe()
 
 callback_done = threading.Event()
 def on_snapshot(doc_snapshot, changes, read_time):
 	for doc in doc_snapshot:
-		print(f'Received document snapshot: {doc.id}')
-		# Execute another function in here with data.
+		filing = doc.to_dict()
+		publish_filing_alert(filing)
 	callback_done.set()
+
+# generate_main_filing_message(filing)
+# Plain text notification: ":rotating_light: *New SEC Filing Alert for {filing['company_name']* :rotating_light: 
+
+def publish_filing_alert(filing):
+	# is_first_result = True
+	try:
+		client.chat_postMessage(
+			channel=get_convo_id("test-alerts"),
+			text="Awesome! :white_check_mark: You are now set-up to receive real-time alerts.",
+			blocks=generate_first_message()
+		)
+	except SlackApiError as e:
+		print(f"PUBLISH_FILING_ALERT ERROR: {e}")
 
 
 @app.command("/stock")
