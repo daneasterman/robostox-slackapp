@@ -20,27 +20,27 @@ modal = [
 				"action_id": "toggle_realtime",
 				"type": "radio_buttons",
 				"initial_option": {
-					"value": "REALTIME_OFF",
+					"value": "REALTIME_ON",
 					"text": {
 						"type": "plain_text",
-						"text": "Off"
+						"text": "On"
 					}
 				},
 				"options": [
-					{
-						"value": "REALTIME_OFF",
-						"text": {
-							"type": "plain_text",
-							"text": "Off"
-						}
-					},
 					{
 						"value": "REALTIME_ON",
 						"text": {
 							"type": "plain_text",
 							"text": "On"
 						}
-					}					
+					},
+					{
+						"value": "REALTIME_OFF",
+						"text": {
+							"type": "plain_text",
+							"text": "Off"
+						}
+					},								
 				]
 			},
 		},
@@ -54,6 +54,13 @@ modal = [
 			"element": {
 				"action_id": "toggle_realtime",
 				"type": "radio_buttons",
+				"initial_option": {
+					"value": "ALL_UPDATES_YES",
+					"text": {
+						"type": "plain_text",
+						"text": "Yes"
+					}
+				},
 				"options": [
 					{
 						"value": "ALL_UPDATES_YES",
@@ -82,10 +89,12 @@ modal = [
 			"element": {
 				"action_id": "ticker_select",
 				"type": "multi_static_select",
+				
 				"placeholder": {
 					"type": "plain_text",
 					"text": "Apple, Tesla, Amazon etc."
 				},
+				"initial_options": [{ "text": { "text": "Microsoft Corp - MSFT", "type": "plain_text" }, "value": "MSFT - 000789019" }],
 				"options": local_tickers
 				}
 			}

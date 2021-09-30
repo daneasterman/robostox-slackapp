@@ -1,17 +1,16 @@
-def get_convo_id(logger):		
-    channel_name = "test-alerts" # temporary
-    convo_id = None
-    try:
-        for result in client.conversations_list():
-            if convo_id is not None:
-                break
-            for channel in result["channels"]:
-                if channel["name"] == channel_name:
-                    convo_id = channel["id"]                    
-                    return convo_id
-    except SlackApiError as e:
-        logger(f"GET_CONVO_ID Error: {e}")
+def natural_lang(percent):
+	if percent == 0:
+		return "unchanged"
+	elif percent > 0:
+		return "up"
+	elif percent < 0:
+		return "down"
 
+def show_percent(week_change):
+	if week_change == 0:
+		return ""
+	else:		
+		return f"`{week_change}%` "
 
 @app.action("ticker_select")
 def ticker_select(ack, action):
@@ -37,8 +36,6 @@ def ticker_select(ack, action):
 		stocks_list.append(stock_dict)
 	# publish_scheduled_message(stocks_list)
 
-
-
 	# This will change to scheduler in prod:
 client = WebClient(SLACK_BOT_TOKEN)
 def publish_scheduled_message(stocks_list, logger):
@@ -57,14 +54,14 @@ def publish_scheduled_message(stocks_list, logger):
 	blocks.append(top_divider)
 
 	for s in stocks_list:
-		week_change = s['week_change']		
+		week_change = s['week_change']
 		main_info = {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
 				"text": f"*{s['long_name']}* is trading at `${s['current_price']}` and is *{natural_lang(week_change)}* {show_percent(week_change)}for the week."
 			},
-		}		
+		}
 		blocks.append(main_info)
 	
 	bottom_divider = {"type": "divider"}
