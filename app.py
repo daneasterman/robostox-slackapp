@@ -94,15 +94,26 @@ def on_snapshot(doc_snapshot, changes, read_time):
 # Plain text notification: ":rotating_light: *New SEC Filing Alert for {filing['company_name']* :rotating_light: 
 
 def publish_filing_alert(filing):
-	# is_first_result = True
-	try:
-		client.chat_postMessage(
-			channel=get_convo_id("test-alerts"),
-			text="Awesome! :white_check_mark: You are now set-up to receive real-time alerts.",
-			blocks=generate_first_message()
-		)
-	except SlackApiError as e:
-		print(f"PUBLISH_FILING_ALERT ERROR: {e}")
+	is_first_result = True
+	if is_first_result:
+		try:
+			client.chat_postMessage(
+				channel=get_convo_id("test-alerts"),
+				text="Awesome! :white_check_mark: You are now set-up to receive real-time alerts.",
+				blocks=generate_first_message()
+			)
+		except SlackApiError as e:
+			print(f"PUBLISH_FILING_ALERT ERROR: {e}")
+		is_first_result = False
+	else:
+		try:
+			client.chat_postMessage(
+				channel=get_convo_id("test-alerts"),
+				text=":rotating_light: *New SEC Filing Alert for {filing['company_name']* :rotating_light: ",
+				blocks=generate_main_filing_message(filing)
+			)
+		except SlackApiError as e:
+			print(f"PUBLISH_FILING_ALERT ERROR: {e}")
 
 
 @app.command("/stock")
