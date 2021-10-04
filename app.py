@@ -74,7 +74,7 @@ def open_modal(ack, body, client, view, logger):
 
 @app.view("modal_view")
 def handle_modal_submit(ack, body, client, view, logger):
-	global_user = body["user"]["id"]
+	user = body["user"]["id"]
 	state_values = view["state"]["values"]
 	radio_choice = state_values["realtime_radio_input"]["toggle_realtime"]["selected_option"]["value"]
 	# Pass this into old ticker select func:
