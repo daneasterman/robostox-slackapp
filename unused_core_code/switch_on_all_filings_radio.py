@@ -1,3 +1,10 @@
+# radio_choice = state_values["realtime_radio_input"]["toggle_realtime"]["selected_option"]["value"]
+
+# if radio_choice == "REALTIME_ON":
+# 		latest_doc.on_snapshot(on_snapshot)
+# 	elif radio_choice == "REALTIME_OFF":
+# 		latest_doc.on_snapshot(on_snapshot).unsubscribe()
+
 {
 			"label": {
 				"type": "plain_text",

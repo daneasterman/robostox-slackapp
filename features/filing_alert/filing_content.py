@@ -9,7 +9,7 @@ def generate_first_message():
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\n\n*Awesome!* :white_check_mark:  You are now set-up to receive real-time alerts. \n\nWhen one of your companies files a report with the SEC you will receive a notification here.\n\nYou can change the companies you follow at any time, all you need to do is re-enter your selections in the settings window you just opened."
+					"text": "\n\n*Awesome!* :white_check_mark:  You are now set-up to receive real-time alerts. \n\nWhen one of your companies files a report with the SEC you will receive a notification here.\n\nYou can change the companies you follow at any time, all you need to do is re-enter the selections you just submitted."
 				}
 			},
 			{

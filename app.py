@@ -76,16 +76,12 @@ def open_modal(ack, body, client, view, logger):
 def handle_modal_submit(ack, body, client, view, logger):
 	user = body["user"]["id"]
 	state_values = view["state"]["values"]
-	radio_choice = state_values["realtime_radio_input"]["toggle_realtime"]["selected_option"]["value"]
-	# Pass this into old ticker select func:
 	multi_select_options = state_values["multi_select_input"]["ticker_select"]["selected_options"]
 	ack()
 	entries_ref = db.collection("entries")	
 	latest_doc = entries_ref.limit(1)
-	if radio_choice == "REALTIME_ON":
+	if multi_select_options:
 		latest_doc.on_snapshot(on_snapshot)
-	elif radio_choice == "REALTIME_OFF":
-		latest_doc.on_snapshot(on_snapshot).unsubscribe()
 
 callback_done = threading.Event()
 def on_snapshot(doc_snapshot, changes, read_time):
