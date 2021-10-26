@@ -32,6 +32,7 @@ def generate_stock_info(symbol):
 			'current_price': round(current_price, 2),
 			'marketcap': marketcap,
 			'volume': volume,
+			'target_price': stock.info['targetMeanPrice'],
 			'day_percent_change': round(percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_percent_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_percent_change(stock, "1mo"), 2),
@@ -39,14 +40,6 @@ def generate_stock_info(symbol):
 	}
 	
 	stock_content = [{
-		"type": "section",
-		"text": {
-			"type": "mrkdwn",
-			"text": f"Here's the latest information for *{stock_data['long_name']}:*"
-		}
-	},
-	{"type": "divider"},
-	{
 		"type": "header",
 		"text": {
 			"type": "plain_text",
@@ -58,7 +51,7 @@ def generate_stock_info(symbol):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* ${stock_data['current_price']} \n\n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"*Price:* ${stock_data['current_price']} \n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}% *1yr Target Price:*  ${stock_data['target_price']}\n\n "
 		},
 		"accessory": {
 			"type": "image",
@@ -70,7 +63,7 @@ def generate_stock_info(symbol):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>"
+			"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>",
 		}
 	},
 	{

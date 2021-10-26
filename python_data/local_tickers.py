@@ -1,6 +1,5 @@
 local_tickers = [
-    { "text": { "text": "Microsoft Corp - MSFT", "type": "plain_text" }, "value": "MSFT - 000789019" },
-    { "text": { "text": "Tesla Motors Inc - TSLA", "type": "plain_text" }, "value": "TSLA - 0001318605" },
+    { "text": { "text": "Microsoft Corp - MSFT", "type": "plain_text" }, "value": "MSFT - 000789019" },    
     { "text": { "text": "Apple Inc - AAPL", "type": "plain_text" }, "value": "AAPL - 000320193" },
     { "text": { "text": "Amazon Com Inc - AMZN", "type": "plain_text" }, "value": "AMZN - 0001018724" },
     { "text": { "text": "Facebook Inc - FB", "type": "plain_text" }, "value": "FB - 0001326801" },
@@ -80,5 +79,11 @@ local_tickers = [
     { "text": { "text": "Social Capital Suvretta Holdings Corp. II - DNAB", "type": "plain_text" }, "value": "DNAB - 0001850271" },
     { "text": { "text": "Social Capital Suvretta Holdings Corp. III - DNAC", "type": "plain_text" }, "value": "DNAC - 0001850270" },
     { "text": { "text": "Social Capital Suvretta Holdings Corp. IV - DNAD", "type": "plain_text" }, "value": "DNAD - 0001850272" },
+    { "text": { "text": "Khosla Ventures Acquisition Co. II - KVSB", "type": "plain_text" }, "value": "KVSB - 0001846069" },
+    { "text": { "text": "Khosla Ventures Acquisition Co. III - KVSC", "type": "plain_text" }, "value": "KVSC - 0001846068" },
+    # COMPANIES BELOW ARE TEST MENU ITEMS:
+    { "text": { "text": "SIMPLICITY ESPORTS & GAMING Co - S", "type": "plain_text" }, "value": "LONE - 0001661920" },
+    { "text": { "text": "Lightning eMotors, Inc. - ZEV", "type": "plain_text" }, "value": "ZEV - 0001802749" },
+    { "text": { "text": "Tesla Motors Inc - TSLA", "type": "plain_text" }, "value": "TSLA - 0001318605" },
 ]
 

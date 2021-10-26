@@ -1,25 +1,19 @@
-# company_name = filing['company_name']
-# form_type = filing['form_type']
-# form_explanation = filing['form_explanation']
-# human_date =  filing['human_date']
-
-def generate_first_message():
-	confirm_content = [
+def generate_generic_confirm():
+	generic_confirm = [
 			{
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "\n\n*Awesome!* :white_check_mark:  You are now set-up to receive real-time alerts. \n\nWhen one of your companies files a report with the SEC you will receive a notification here.\n\nYou can change the companies you follow at any time, all you need to do is re-enter the selections you just submitted."
+					"text": "\n\nAwesome! :white_check_mark:  You are now set-up to receive real-time alerts. \n\nWhen one of your companies files a report with the SEC you will receive a notification here.\n\nYou can change the companies you follow at any time, all you need to do is re-enter the selections you just submitted."
 				}
 			},
 			{
 				"type": "divider"
 			}
 		]
-	return confirm_content
+	return generic_confirm
 
-
-def generate_main_filing_message(filing):
+def generate_filing_alert(filing):
 	filing_content = [
 			{
 				"type": "section",

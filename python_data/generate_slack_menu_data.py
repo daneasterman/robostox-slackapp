@@ -43,7 +43,7 @@ def get_xml():
 			full_obj = {
 				"text": {
 					"text": f"{company_name} - {symbol}",
-					"type": "plain_text",				
+					"type": "plain_text",
 				},
 				"value": f"{symbol} - {CIK}"
 			}
