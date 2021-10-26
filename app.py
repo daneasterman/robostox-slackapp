@@ -60,9 +60,10 @@ def open_home_tab(client, event, logger):
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()	
-	user_symbol = command['text']	
+	user_symbol = command['text']
+	user_name = command['user_name']	
 	try:
-		stock_data, stock_content = generate_stock_info(user_symbol)		
+		stock_data, stock_content = generate_stock_info(user_symbol, user_name)		
 		say(
 			text=f"Here's your update for {stock_data['long_name']}",
 			blocks=stock_content

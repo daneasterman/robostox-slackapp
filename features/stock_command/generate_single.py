@@ -12,7 +12,7 @@ def get_period_percent_change(stock, period):
     period_percent_change = percent_change(period_start, period_end)
     return period_percent_change
 
-def generate_stock_info(symbol):
+def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)
 	
 	previous_close = stock.info['previousClose']
@@ -39,19 +39,27 @@ def generate_stock_info(symbol):
 			'year_percent_change': round(get_period_percent_change(stock, "ytd"), 2)
 	}
 	
-	stock_content = [{
+	stock_content = [
+		{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"@{user_name} just requested information on *{stock_data['long_name']}* with: `/stock`"
+			}
+		},
+		{
 		"type": "header",
 		"text": {
 			"type": "plain_text",
-			"text": f"{stock_data['long_name']}  |  {stock_data['symbol']}",
-			"emoji": True
+			"text": f":chart_with_upwards_trend:  {stock_data['long_name']}  |  {stock_data['symbol']}",
+			"emoji": True			
 		}
 	},
 	{
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* ${stock_data['current_price']} \n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}% *1yr Target Price:*  ${stock_data['target_price']}\n\n "
+			"text": f"*Price:* ${stock_data['current_price']} \n\n *Market Cap:* ${stock_data['marketcap']} \n *Volume:* ${stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",
