@@ -14,8 +14,8 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 from features.common.get_convo_id import get_convo_id
-from features.stock_command.generate_single import generate_stock_info, get_period_percent_change
-from features.filing_alert.filing_content import generate_generic_confirm, generate_filing_alert
+from features.stock_command.generate_single_stock import generate_stock_info
+# from features.filing_alert.filing_content import generate_generic_confirm, generate_filing_alert
 
 from python_data.menus import multi_internal_select
 from home_screen import home_screen
@@ -73,10 +73,11 @@ def run_stock_command(ack, say, command, logger):
 			text=plain_api_error(user_symbol),
 			blocks=rich_api_error(user_symbol)
 		)
-	# except Exception as e:
-	# 	say(
-	# 		text=generic_error_text
-	# 	)
+	# ENSURE IN PROD:
+	except Exception as e:
+		say(
+			text=generic_error_text
+		)
 
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
