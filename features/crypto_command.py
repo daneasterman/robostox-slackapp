@@ -23,22 +23,18 @@ def generate_crypto_info():
 	volume = numerize.numerize(raw_volume, 2)
 	day_percent_change = get_price[coin_variable]['usd_24h_change']
 	
-	get_coin_content = cg.get_coin_by_id(id=coin_variable,
-																		developer_data=False, 
-																		sparkline=False, 
-																		community_data=False, 
-																		localization=False, 
-																		market_data=False, 
-																		tickers=False)
-	
+	get_coin_content = cg.get_coin_by_id(id=coin_variable, developer_data=False, sparkline=False, 
+			community_data=False, localization=False, market_data=False, tickers=False)	
 	logo = get_coin_content['image']['large']
+	symbol = get_coin_content['symbol'].upper()
 	
-	crypto_data = {		
+	crypto_data = {	
 		'price': format(rounded_price, ','),
 		'marketcap': marketcap,
 		'volume': volume,
 		'day_percent_change': round(day_percent_change, 2),
-		'logo': logo
+		'logo': logo,
+		'symbol': symbol
 	}
 	print('**crypto_data obj', crypto_data)
 	
