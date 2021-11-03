@@ -1,8 +1,4 @@
 import os
-import json
-
-import yfinance as yf
-from datetime import datetime, time, timedelta
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
@@ -32,10 +28,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Start Slack App
-app = App(
-		token=SLACK_BOT_TOKEN,
-		signing_secret=SLACK_SIGNING_SECRET
-)
+app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 
 @app.event("app_home_opened")
 def open_home_tab(client, event, logger):

@@ -1,3 +1,5 @@
+from datetime import datetime, time, timedelta
+
 def schedule_message():
     convo_id = get_convo_id()
     every_friday = datetime.now().astimezone()
