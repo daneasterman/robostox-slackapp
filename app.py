@@ -3,7 +3,7 @@ from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from whitenoise import WhiteNoise
 import firebase_admin
 from firebase_admin import credentials

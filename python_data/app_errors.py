@@ -14,7 +14,7 @@ def rich_stock_error(user_symbol):
 def rich_crypto_error(user_symbol):
 	rich_error_text = [{
 				"type": "section",
-				"text": {"type": "mrkdwn", "text": f"Sorry, the crypto symbol *{user_symbol}* was not found. Are you sure you spelt it correctly? You can find more crypto symbols on: <https://www.coingecko.com/|CoinGecko>"}
+				"text": {"type": "mrkdwn", "text": f"Sorry, the symbol *{user_symbol}* was not found. Are you sure you spelt it correctly? You can find more symbols for crypto assets on: <https://www.coingecko.com/|CoinGecko>"}
 				}]
 	return rich_error_text
 
