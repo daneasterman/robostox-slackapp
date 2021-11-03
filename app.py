@@ -10,8 +10,15 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 from features.stock_command import generate_stock_info
+from features.crypto_command import generate_crypto_info
 from home_screen import home_screen
-from python_data.app_errors import plain_api_error, rich_api_error, generic_error_text
+from python_data.app_errors import (
+	plain_stock_error, 
+	plain_crypto_error, 
+	rich_stock_error, 
+	rich_crypto_error, 
+	generic_error_text,
+) 
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -51,17 +58,37 @@ def run_stock_command(ack, say, command, logger):
 	user_symbol = command['text']
 	user_name = command['user_name']	
 	try:
-		stock_data, stock_content = generate_stock_info(user_symbol, user_name)		
+		long_name, stock_content = generate_stock_info(user_symbol, user_name)		
 		say(
-			text=f"Here's your update for {stock_data['long_name']}",
+			text=f"Here's your update for {long_name}",
 			blocks=stock_content
 		)
 	except KeyError:
 		say(
-			text=plain_api_error(user_symbol),
-			blocks=rich_api_error(user_symbol)
+			text=plain_stock_error(user_symbol),
+			blocks=rich_stock_error(user_symbol)
+		)	
+	except Exception as e:
+		say(
+			text=generic_error_text
 		)
-	# ENSURE IN PROD:
+
+@app.command("/coin")
+def run_crypto_command(ack, say, command, logger):	
+	ack()	
+	coin_variable = command['text']
+	user_name = command['user_name']	
+	try:
+		long_name, crypto_content = generate_crypto_info(coin_variable, user_name)		
+		say(
+			text=f"Here's your update for {long_name}",
+			blocks=crypto_content
+		)
+	except KeyError:
+		say(
+			text=plain_crypto_error(coin_variable),
+			blocks=rich_crypto_error(coin_variable)
+		)	
 	except Exception as e:
 		say(
 			text=generic_error_text

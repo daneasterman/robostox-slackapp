@@ -76,4 +76,4 @@ def generate_stock_info(symbol, user_name):
 		"type": "divider"
 	}]
 	
-	return stock_data, stock_content
+	return stock_data['long_name'], stock_content

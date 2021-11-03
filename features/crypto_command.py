@@ -1,4 +1,3 @@
-import time
 from pycoingecko import CoinGeckoAPI
 from numerize import numerize
 from datetime import datetime
@@ -22,9 +21,8 @@ def get_period_change(coin_variable, period):
 	period_percent_change = get_percent_change(period_start, period_end)
 	return period_percent_change
 
-def generate_crypto_info():
-	cg = CoinGeckoAPI()
-	coin_variable = 'bitcoin'
+def generate_crypto_info(coin_variable, user_name):
+	cg = CoinGeckoAPI()	
 	get_price = cg.get_price(ids=coin_variable, 
 																	vs_currencies='usd', 
 																	include_market_cap=True, 
@@ -39,12 +37,14 @@ def generate_crypto_info():
 	volume = numerize.numerize(raw_volume, 2)
 	day_percent_change = get_price[coin_variable]['usd_24h_change']
 	
-	get_coin_content = cg.get_coin_by_id(id=coin_variable, developer_data=False, sparkline=False, 
+	get_by_id = cg.get_coin_by_id(id=coin_variable, developer_data=False, sparkline=False, 
 			community_data=False, localization=False, market_data=False, tickers=False)	
-	logo = get_coin_content['image']['large']
-	symbol = get_coin_content['symbol'].upper()	
+	long_name = get_by_id['name']
+	logo = get_by_id['image']['large']
+	symbol = get_by_id['symbol'].upper()
 
-	crypto_data = {	
+	crypto_data = {
+		'long_name': long_name,
 		'price': format(rounded_price, ','),
 		'marketcap': marketcap,
 		'volume': volume,
@@ -56,6 +56,43 @@ def generate_crypto_info():
 		'year_percent_change': round(get_period_change(coin_variable, -365), 2)
 	}
 
-	print('**crypto_data_obj', crypto_data)	
-
-generate_crypto_info()
+	crypto_content = [
+		{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"@{user_name} just requested information on *{crypto_data['long_name']}* with: `/coin`"
+			}
+		},
+		{
+		"type": "header",
+		"text": {
+			"type": "plain_text",
+			"text": f":chart_with_upwards_trend:  {crypto_data['long_name']}  |  {crypto_data['symbol']}",
+			"emoji": True			
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"*Price:* ${crypto_data['price']} \n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']} \n\n *24hr:*  {crypto_data['day_percent_change']}% \n *5d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
+		},
+		"accessory": {
+			"type": "image",
+			"image_url": f"{crypto_data['logo']}",
+			"alt_text": "company logo"
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": f"*View Charts:* <https://www.coingecko.com/en/coins/{coin_variable}| CoinGecko | {crypto_data['long_name']}>",
+		}
+	},
+	{
+		"type": "divider"
+	}]
+	
+	return long_name, crypto_content
