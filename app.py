@@ -1,5 +1,6 @@
 import os
 from slack_bolt import App
+from slackeventsapi import SlackEventAdapter
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -34,9 +35,11 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Start Slack App
-app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
+app = Flask(__name__)
+slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
+# app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 
-@app.event("app_home_opened")
+@slack_events_adapter.on("app_home_opened")
 def open_home_tab(client, event, logger):
   try:
     client.views_publish(
@@ -50,7 +53,7 @@ def open_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@app.command("/stock")
+@slack_events_adapter.on("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()	
 	user_symbol = command['text']
@@ -78,7 +81,7 @@ def get_db_coin_id(user_symbol):
 	coin_id = doc.to_dict().get("coin_id")
 	return coin_id
 
-@app.command("/coin")
+@slack_events_adapter.on("/coin")
 def run_crypto_command(ack, say, command, logger):	
 	ack()
 	user_name = command['user_name']
@@ -101,10 +104,12 @@ def run_crypto_command(ack, say, command, logger):
 			text=generic_error_text
 		)
 
-flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
-flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
+# flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
 
-@flask_app.route("/slack/events", methods=["POST"])
+@app.route("/slack/events", methods=["POST"])
 def slack_events():
 	return handler.handle(request)
+
+if __name__ == "__main__":
+  app.run(port=3000)

@@ -48,6 +48,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycoingecko==2.2.0
 pycparser==2.20
+pyee==8.2.2
 pyparsing==2.4.7
 PySocks==1.7.1
 python-dateutil==2.8.1
@@ -61,6 +62,7 @@ rsa==4.7.2
 six==1.15.0
 slack-bolt==1.4.4
 slack-sdk==3.4.2
+slackeventsapi==3.0.0
 soupsieve==2.2.1
 tweepy==3.10.0
 typing-extensions==3.10.0.0
