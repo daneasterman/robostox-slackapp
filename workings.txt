@@ -1,0 +1,28 @@
+doc_has_symbol = coins_ref.document(api_symbol)
+
+NEW API: ton => ton-crystal
+EXISTING DB: ton => tokamak-network
+
+NEW API: rune => thorchain-erc20
+EXISTING DB: rune => thorchain
+
+NEW API: steth => stakehound-staked-ether
+EXISTING DB: steth => staked-ether
+
+NEW API: dvpn => sentinel-group
+EXISTING DB: dvpn => sentinel
+
+NEW API: time => chronobank
+EXISTING DB: time => wonderland
+
+NEW API: gro => growth-defi
+EXISTING DB: gro => gro-dao-token
+
+NEW API: usdp => usdp
+EXISTING DB: usdp => paxos-standard
+
+NEW API: like => only1
+EXISTING DB: like => likecoin
+
+NEW API: bank => float-protocol
+EXISTING DB: bank => bankless-dao

@@ -18,8 +18,7 @@ from python_data.app_errors import (
 	rich_stock_error, 
 	rich_crypto_error, 
 	generic_error_text,
-) 
-
+)
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -51,7 +50,6 @@ def open_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()	
@@ -73,21 +71,30 @@ def run_stock_command(ack, say, command, logger):
 			text=generic_error_text
 		)
 
+def get_db_coin_id(user_symbol):
+	coins_ref = db.collection("coins")
+	doc_ref = coins_ref.document(user_symbol)
+	doc = doc_ref.get()
+	coin_id = doc.to_dict().get("coin_id")
+	return coin_id
+
 @app.command("/coin")
 def run_crypto_command(ack, say, command, logger):	
-	ack()	
-	coin_variable = command['text']
-	user_name = command['user_name']	
+	ack()
+	user_name = command['user_name']
+	user_symbol = command['text']
+	
 	try:
-		long_name, crypto_content = generate_crypto_info(coin_variable, user_name)		
+		coin_id = get_db_coin_id(user_symbol)
+		long_name, crypto_content = generate_crypto_info(coin_id, user_name)
 		say(
-			text=f"Here's your update for {long_name}",
+			text=f"Here's your update for: {long_name}",
 			blocks=crypto_content
 		)
-	except KeyError:
+	except AttributeError:
 		say(
-			text=plain_crypto_error(coin_variable),
-			blocks=rich_crypto_error(coin_variable)
+			text=plain_crypto_error(user_symbol),
+			blocks=rich_crypto_error(user_symbol)
 		)	
 	except Exception as e:
 		say(
