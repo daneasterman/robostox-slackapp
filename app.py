@@ -36,7 +36,7 @@ db = firestore.client()
 
 # Start Slack App
 app = Flask(__name__)
-slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
+slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "https://robostox-v1.herokuapp.com/slack/events", app)
 # app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 
 @slack_events_adapter.on("app_home_opened")
