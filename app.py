@@ -1,11 +1,10 @@
 import os
+import logging
 from slack_bolt import App
-from slackeventsapi import SlackEventAdapter
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from flask import Flask, request
-from whitenoise import WhiteNoise
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -36,6 +35,7 @@ db = firestore.client()
 
 # Start Slack App
 flask_app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG)
 app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 handler = SlackRequestHandler(app)
 
@@ -50,6 +50,11 @@ def install():
 @flask_app.route("/slack/oauth_redirect", methods=["GET"])
 def oauth_redirect():
 	return handler.handle(request)
+
+@app.middleware
+def log_request(logger, body, next):
+	logger.debug(body)
+	return next()
 
 @app.event("app_home_opened")
 def open_home_tab(client, event, logger):
