@@ -35,11 +35,23 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Start Slack App
-app = Flask(__name__)
-slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "https://robostox-v1.herokuapp.com/slack/events", app)
-# app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
+flask_app = Flask(__name__)
+app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
+handler = SlackRequestHandler(app)
 
-@slack_events_adapter.on("app_home_opened")
+@flask_app.route("/slack/events", methods=["POST"])
+def slack_events():
+	return handler.handle(request)
+
+@flask_app.route("/slack/install", methods=["GET"])
+def install():
+	return handler.handle(request)
+
+@flask_app.route("/slack/oauth_redirect", methods=["GET"])
+def oauth_redirect():
+	return handler.handle(request)
+
+@app.event("app_home_opened")
 def open_home_tab(client, event, logger):
   try:
     client.views_publish(
@@ -53,7 +65,7 @@ def open_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@slack_events_adapter.on("/stock")
+@app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()	
 	user_symbol = command['text']
@@ -81,7 +93,7 @@ def get_db_coin_id(user_symbol):
 	coin_id = doc.to_dict().get("coin_id")
 	return coin_id
 
-@slack_events_adapter.on("/coin")
+@app.command("/coin")
 def run_crypto_command(ack, say, command, logger):	
 	ack()
 	user_name = command['user_name']
@@ -103,13 +115,3 @@ def run_crypto_command(ack, say, command, logger):
 		say(
 			text=generic_error_text
 		)
-
-handler = SlackRequestHandler(app)
-# flask_app.wsgi_app = WhiteNoise(flask_app.wsgi_app, root='static/')
-
-@app.route("/slack/events", methods=["POST"])
-def slack_events():
-	return handler.handle(request)
-
-if __name__ == "__main__":
-  app.run(port=3000)
