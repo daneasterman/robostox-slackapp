@@ -22,20 +22,27 @@ from python_data.app_errors import (
 from dotenv import load_dotenv
 load_dotenv()
 
-# Heroku automatically pulls the variables from this:
+# Set these variables in the CLI, then Heroku:
 SLACK_USER_TOKEN = str(os.getenv('SLACK_USER_TOKEN'))
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
 client = WebClient(SLACK_BOT_TOKEN)
 
 # Initialise Firestore
-cred = credentials.Certificate('firestore-sdk.json')
+cred = credentials.Certificate({
+	"type": "service_account",
+	"project_id": str(os.getenv('FIREBASE_PROJECT_ID')),
+	"private_key": str(os.getenv('FIREBASE_PRIVATE_KEY')).replace("\\n", "\n"),
+	"token_uri": "https://oauth2.googleapis.com/token",
+	"client_email": str(os.getenv('FIREBASE_CLIENT_EMAIL'))
+})
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Start Slack App
 flask_app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 handler = SlackRequestHandler(app)
 
