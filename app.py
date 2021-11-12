@@ -42,7 +42,7 @@ db = firestore.client()
 
 # Start Slack App
 flask_app = Flask(__name__)
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 handler = SlackRequestHandler(app)
 
