@@ -31,7 +31,7 @@ SLACK_USER_TOKEN = str(os.getenv('SLACK_USER_TOKEN'))
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
 SLACK_CLIENT_ID = str(os.getenv('SLACK_CLIENT_ID'))
-SLACK_CLIENT_SECRET = str(os.getenv('SLACK_CLIENT_ID'))
+SLACK_CLIENT_SECRET = str(os.getenv('SLACK_CLIENT_SECRET'))
 
 oauth_settings = OAuthSettings(
     client_id=SLACK_CLIENT_ID,
