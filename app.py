@@ -22,16 +22,11 @@ from python_data.app_errors import (
 	rich_crypto_error,
 	generic_error_text,
 )
-from dotenv import load_dotenv
-load_dotenv()
+from config import SLACK_SIGNING_SECRET, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
+
 # logging.basicConfig(level=logging.DEBUG)
 
-# Set these variables in the CLI, then Heroku:
-SLACK_USER_TOKEN = str(os.getenv('SLACK_USER_TOKEN'))
-SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
-SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
-SLACK_CLIENT_ID = str(os.getenv('SLACK_CLIENT_ID'))
-SLACK_CLIENT_SECRET = str(os.getenv('SLACK_CLIENT_SECRET'))
+breakpoint()
 
 oauth_settings = OAuthSettings(
     client_id=SLACK_CLIENT_ID,

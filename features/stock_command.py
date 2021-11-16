@@ -30,7 +30,7 @@ def generate_stock_info(symbol, user_name):
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
 			'current_price': round(current_price, 2),
 			'marketcap': marketcap,
-			'volume': volume,			
+			'volume': volume,
 			'day_percent_change': round(get_percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_change(stock, "1mo"), 2),
