@@ -1,6 +1,9 @@
 import os
 import logging
 from slack_bolt import App
+from slack_bolt.oauth.oauth_settings import OAuthSettings
+from slack_sdk.oauth.installation_store import FileInstallationStore
+from slack_sdk.oauth.state_store import FileOAuthStateStore
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -15,18 +18,28 @@ from home_screen import home_screen
 from python_data.app_errors import (
 	plain_stock_error, 
 	plain_crypto_error, 
-	rich_stock_error, 
-	rich_crypto_error, 
+	rich_stock_error,
+	rich_crypto_error,
 	generic_error_text,
 )
 from dotenv import load_dotenv
 load_dotenv()
+# logging.basicConfig(level=logging.DEBUG)
 
 # Set these variables in the CLI, then Heroku:
 SLACK_USER_TOKEN = str(os.getenv('SLACK_USER_TOKEN'))
 SLACK_BOT_TOKEN = str(os.getenv('SLACK_BOT_TOKEN'))
 SLACK_SIGNING_SECRET = str(os.getenv('SLACK_SIGNING_SECRET'))
-client = WebClient(SLACK_BOT_TOKEN)
+SLACK_CLIENT_ID = str(os.getenv('SLACK_CLIENT_ID'))
+SLACK_CLIENT_SECRET = str(os.getenv('SLACK_CLIENT_ID'))
+
+oauth_settings = OAuthSettings(
+    client_id=SLACK_CLIENT_ID,
+    client_secret=SLACK_CLIENT_SECRET,		
+    scopes=["chat:write", "commands", "chat:write.public"],
+    installation_store=FileInstallationStore(base_dir="./data"),
+    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data")
+)
 
 # Initialise Firestore
 cred = credentials.Certificate({
@@ -42,7 +55,6 @@ db = firestore.client()
 
 # Start Slack App
 flask_app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
 app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 handler = SlackRequestHandler(app)
 
