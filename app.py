@@ -40,8 +40,6 @@ oauth_settings = OAuthSettings(
     installation_store=FileInstallationStore(base_dir="./data"),
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data")
 )
-app =App(signing_secret=SLACK_SIGNING_SECRET, oauth_settings=oauth_settings)
-handler = SlackRequestHandler(app)
 
 # Initialise Firestore
 cred = credentials.Certificate({
@@ -55,8 +53,10 @@ cred = credentials.Certificate({
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+# Start Slack App
 flask_app = Flask(__name__)
-
+app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
+handler = SlackRequestHandler(app)
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
