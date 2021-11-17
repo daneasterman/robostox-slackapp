@@ -26,8 +26,6 @@ from config import SLACK_SIGNING_SECRET, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
 
 # logging.basicConfig(level=logging.DEBUG)
 
-breakpoint()
-
 oauth_settings = OAuthSettings(
     client_id=SLACK_CLIENT_ID,
     client_secret=SLACK_CLIENT_SECRET,		

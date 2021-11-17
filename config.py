@@ -2,8 +2,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 DEPLOY_ENV = os.getenv('DEPLOY_ENV')
+
+# DEV VARS ARE IN .ENV (UNTRACKED DUE TO .GITIGNORE)
+# PROD VARS ARE IN PRIVATE HEROKU SETTINGS (CONFIG VARS)
 
 if DEPLOY_ENV == "development":
 	SLACK_SIGNING_SECRET = os.getenv('DEV_SLACK_SIGNING_SECRET')
