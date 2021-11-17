@@ -33,7 +33,7 @@ oauth_settings = OAuthSettings(
     installation_store=FileInstallationStore(base_dir="./data"),
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data")
 )
-app =App(signing_secret=SLACK_SIGNING_SECRET, oauth_settings=oauth_settings)
+app = App(signing_secret=SLACK_SIGNING_SECRET, oauth_settings=oauth_settings)
 handler = SlackRequestHandler(app)
 
 # Initialise Firestore
