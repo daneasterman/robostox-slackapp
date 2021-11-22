@@ -11,16 +11,22 @@ def get_period_change(stock, period):
     period_percent_change = get_percent_change(period_start, period_end)
     return period_percent_change
 
+def toggle_marketcap(rawcap, currency_symbol):
+	if rawcap:
+		clean_cap = numerize.numerize(rawcap, 2)
+		return f"\n\n *Market Cap:* {currency_symbol}{clean_cap}\n"
+	else:
+		return "\n"
+		
+
 def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)	
 	previous_close = stock.info['previousClose']
-	current_price = stock.info['regularMarketPrice']
-	raw_marketcap = stock.info['marketCap']
-	marketcap = numerize.numerize(raw_marketcap, 2)
+	current_price = stock.info['regularMarketPrice']	
 	raw_volume = stock.info['averageVolume']
 	volume = numerize.numerize(raw_volume, 2)
 	logo = stock.info['logo_url']
-	is_valid_image = check_valid_image(logo)	
+	is_valid_image = check_valid_image(logo)
 	currency_code = stock.info['currency'].upper()
 	currency_symbol = get_currency_symbol(currency_code)
 		
@@ -29,7 +35,7 @@ def generate_stock_info(symbol, user_name):
 			'long_name': stock.info['longName'],
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
 			'current_price': round(current_price, 2),
-			'marketcap': marketcap,
+			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),
 			'volume': volume,
 			'day_percent_change': round(get_percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
@@ -57,7 +63,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} \n\n *Market Cap:* {currency_symbol}{stock_data['marketcap']} \n *Volume:* {currency_symbol}{stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Volume:* {currency_symbol}{stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",
