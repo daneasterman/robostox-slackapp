@@ -78,7 +78,7 @@ def generate_crypto_info(coin_id, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* ${crypto_data['price']} \n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']}\n*ATH Price:* ${crypto_data['ath_price']} \n\n *24hr:*  {crypto_data['day_percent_change']}% \n *7d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
+			"text": f"*Price:* ${crypto_data['price']} \n\n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']}\n*ATH Price:* ${crypto_data['ath_price']} \n\n\n *24hr:*  {crypto_data['day_percent_change']}% \n *7d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",

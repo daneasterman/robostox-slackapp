@@ -14,7 +14,7 @@ def get_period_change(stock, period):
 def toggle_marketcap(rawcap, currency_symbol):
 	if rawcap:
 		clean_cap = numerize.numerize(rawcap, 2)
-		return f"\n\n *Market Cap:* {currency_symbol}{clean_cap}\n"
+		return f"\n\n\n *Market Cap:* {currency_symbol}{clean_cap}\n"
 	else:
 		return "\n"
 		
@@ -63,7 +63,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Volume:* {currency_symbol}{stock_data['volume']} \n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Volume:* {currency_symbol}{stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",
