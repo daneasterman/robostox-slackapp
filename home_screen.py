@@ -40,7 +40,7 @@ home_screen = [
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*1️⃣ Use the `/stock` command.* \n\n Type `/stock` followed by the stock ticker symbol. For example: `/stock tsla` for information on *Tesla*. This app supports every stock available on Yahoo Finance. All price data is denominated according to the local exchange the stock is listed on."
+			"text": "*1️⃣ Use the `/stock` command.* \n\n Type `/stock` followed by the stock ticker symbol. For example: `/stock tsla` for information on *Tesla*. \n\n RoboStox supports every stock available on Yahoo Finance. All price data is denominated according to the local exchange the stock is listed on."
 		}
 	},
 	{
@@ -54,7 +54,7 @@ home_screen = [
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*2️⃣ Use the `/coin` command.* \n\n Type `/coin` followed by the crypto (coin) symbol. For example: `/coin btc` for price information on *Bitcoin*. RoboStox supports the top 1000 crypto assets by market cap. But additional tokens can be added on request."
+			"text": "*2️⃣ Use the `/coin` command.* \n\n Type `/coin` followed by the crypto (coin) symbol. For example: `/coin btc` for price information on *Bitcoin*. \n\n This app supports the top 1000 crypto assets by market cap, denominated in US Dollars. Additional crypto assets can be added on request."
 		}
 	},
 	{
