@@ -22,7 +22,7 @@ def get_period_change(coin_id, period):
 	return period_percent_change
 
 def generate_crypto_info(coin_id, user_name):
-	cg = CoinGeckoAPI()	
+	cg = CoinGeckoAPI()
 	get_price = cg.get_price(ids=coin_id, 
 																vs_currencies='usd', 
 																include_market_cap=True, 
@@ -37,11 +37,11 @@ def generate_crypto_info(coin_id, user_name):
 	volume = numerize.numerize(raw_volume, 2)
 	day_percent_change = get_price[coin_id]['usd_24h_change']
 	
-	get_by_id = cg.get_coin_by_id(id=coin_id, developer_data=False, sparkline=False, 
-			community_data=False, localization=False, market_data=False, tickers=False)	
-	long_name = get_by_id['name']
-	logo = get_by_id['image']['large']
-	symbol = get_by_id['symbol'].upper()
+	extra_data = cg.get_coins_markets(ids=coin_id, vs_currency="usd", sparkline=False)
+	long_name = extra_data[0]['name']
+	logo = extra_data[0]['image']
+	symbol = extra_data[0]['symbol'].upper()
+	ath_price = extra_data[0]['ath']
 
 	crypto_data = {
 		'long_name': long_name,
@@ -51,6 +51,7 @@ def generate_crypto_info(coin_id, user_name):
 		'day_percent_change': round(day_percent_change, 2),
 		'logo': logo,
 		'symbol': symbol,
+		'ath_price': ath_price,
 		'week_percent_change': round(get_period_change(coin_id, -6), 2),
 		'month_percent_change': round(get_period_change(coin_id, -30), 2),
 		'year_percent_change': round(get_period_change(coin_id, -365), 2)
@@ -76,7 +77,7 @@ def generate_crypto_info(coin_id, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* ${crypto_data['price']} \n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']} \n\n *24hr:*  {crypto_data['day_percent_change']}% \n *7d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
+			"text": f"*Price:* ${crypto_data['price']} \n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']}\n*ATH Price:* ${crypto_data['ath_price']} \n\n *24hr:*  {crypto_data['day_percent_change']}% \n *7d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",
