@@ -41,7 +41,8 @@ def generate_crypto_info(coin_id, user_name):
 	long_name = extra_data[0]['name']
 	logo = extra_data[0]['image']
 	symbol = extra_data[0]['symbol'].upper()
-	ath_price = extra_data[0]['ath']
+	raw_ath = extra_data[0]['ath']
+	rounded_ath = round(raw_ath, 2)
 
 	crypto_data = {
 		'long_name': long_name,
@@ -51,7 +52,7 @@ def generate_crypto_info(coin_id, user_name):
 		'day_percent_change': round(day_percent_change, 2),
 		'logo': logo,
 		'symbol': symbol,
-		'ath_price': ath_price,
+		'ath_price': format(rounded_ath, ','),
 		'week_percent_change': round(get_period_change(coin_id, -6), 2),
 		'month_percent_change': round(get_period_change(coin_id, -30), 2),
 		'year_percent_change': round(get_period_change(coin_id, -365), 2)

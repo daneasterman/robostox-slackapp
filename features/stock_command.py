@@ -56,7 +56,7 @@ def generate_stock_info(symbol, user_name):
 		"text": {
 			"type": "plain_text",
 			"text": f":chart_with_upwards_trend:  {stock_data['long_name']}  |  {stock_data['symbol']}",
-			"emoji": True			
+			"emoji": True
 		}
 	},
 	{
