@@ -121,7 +121,7 @@ def run_crypto_command(ack, say, command, logger):
 	try: 
 		user_symbol = command['text']
 		try:
-			coin_id = get_db_coin_id(user_symbol)
+			coin_id = get_db_coin_id(user_symbol.lower())
 			long_name, crypto_content = generate_crypto_info(coin_id, user_name)
 			say(
 				text=f"Here's your update for: {long_name}",
