@@ -16,8 +16,7 @@ def toggle_marketcap(rawcap, currency_symbol):
 		clean_cap = numerize.numerize(rawcap, 2)
 		return f"\n\n\n *Market Cap:* {currency_symbol}{clean_cap}\n"
 	else:
-		return "\n"
-		
+		return "\n"		
 
 def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)	
