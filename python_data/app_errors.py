@@ -4,6 +4,9 @@ def plain_stock_error(user_symbol):
 def plain_crypto_error(user_symbol):	
 	return f"Sorry, the symbol {user_symbol} was not found. Are you sure you spelt it correctly? You can find more stock ticker symbols on CoinGecko."
 
+def plain_no_entry():	
+	return f"Sorry, it looks like you forgot to enter a symbol for that asset. Please try again or contact robostox@gmail.com for help or more information."
+
 def rich_stock_error(user_symbol):
 	rich_error_text = [{
 				"type": "section",
