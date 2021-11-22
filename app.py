@@ -21,6 +21,7 @@ from python_data.app_errors import (
 	rich_stock_error,
 	rich_crypto_error,
 	generic_error_text,
+	plain_no_entry
 )
 from config import SLACK_SIGNING_SECRET, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
 
@@ -84,24 +85,27 @@ def open_home_tab(client, event, logger):
 
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
-	ack()	
-	user_symbol = command['text']
+	ack()
 	user_name = command['user_name']	
 	try:
-		long_name, stock_content = generate_stock_info(user_symbol, user_name)		
-		say(
-			text=f"Here's your update for {long_name}",
-			blocks=stock_content
-		)
+		user_symbol = command['text']	
+		try:
+			long_name, stock_content = generate_stock_info(user_symbol, user_name)		
+			say(
+				text=f"Here's your update for {long_name}",
+				blocks=stock_content
+			)
+		except KeyError:
+			say(
+				text=plain_stock_error(user_symbol),
+				blocks=rich_stock_error(user_symbol)
+			)	
+		except Exception as e:
+			say(
+				text=generic_error_text
+			)
 	except KeyError:
-		say(
-			text=plain_stock_error(user_symbol),
-			blocks=rich_stock_error(user_symbol)
-		)	
-	except Exception as e:
-		say(
-			text=generic_error_text
-		)
+		say(text=plain_no_entry())
 
 def get_db_coin_id(user_symbol):
 	coins_ref = db.collection("coins")
@@ -114,21 +118,21 @@ def get_db_coin_id(user_symbol):
 def run_crypto_command(ack, say, command, logger):	
 	ack()
 	user_name = command['user_name']
-	user_symbol = command['text']
-	
-	try:
-		coin_id = get_db_coin_id(user_symbol)
-		long_name, crypto_content = generate_crypto_info(coin_id, user_name)
-		say(
-			text=f"Here's your update for: {long_name}",
-			blocks=crypto_content
-		)
-	except AttributeError:
-		say(
-			text=plain_crypto_error(user_symbol),
-			blocks=rich_crypto_error(user_symbol)
-		)	
-	except Exception as e:
-		say(
-			text=generic_error_text
-		)
+	try: 
+		user_symbol = command['text']
+		try:
+			coin_id = get_db_coin_id(user_symbol)
+			long_name, crypto_content = generate_crypto_info(coin_id, user_name)
+			say(
+				text=f"Here's your update for: {long_name}",
+				blocks=crypto_content
+			)
+		except AttributeError:
+			say(
+				text=plain_crypto_error(user_symbol),
+				blocks=rich_crypto_error(user_symbol)
+			)		
+		except Exception as e:
+			say(text=generic_error_text)
+	except KeyError:
+		say(text=plain_no_entry())
