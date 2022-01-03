@@ -87,7 +87,7 @@ home_screen = [
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "You can contact me at robostox@gmail.com if you need help, have any questions, or would like to request additional crypto assets for this app."
+				"text": "You can contact me at hellorobostox@gmail.com if you need help, have any questions, or would like to request additional crypto assets for this app."
 			}
 		},
 		{
