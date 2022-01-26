@@ -23,6 +23,7 @@ from python_data.app_errors import (
 	generic_error_text,
 	plain_no_entry
 )
+from database import oauth_state_store, installation_store
 from config import SLACK_SIGNING_SECRET, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -31,8 +32,8 @@ oauth_settings = OAuthSettings(
     client_id=SLACK_CLIENT_ID,
     client_secret=SLACK_CLIENT_SECRET,
     scopes=["chat:write", "commands", "chat:write.public"],
-    installation_store=FileInstallationStore(base_dir="./data/installations"),
-    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states")
+    installation_store=installation_store,
+    state_store=oauth_state_store,
 )
 app = App(signing_secret=SLACK_SIGNING_SECRET, oauth_settings=oauth_settings)
 handler = SlackRequestHandler(app)
