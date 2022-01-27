@@ -7,7 +7,7 @@ from slack_sdk.oauth.installation_store import InstallationStore
 from slack_sdk.oauth.installation_store.sqlalchemy import SQLAlchemyInstallationStore
 from slack_sdk.oauth.state_store.sqlalchemy import SQLAlchemyOAuthStateStore
 from sqlalchemy.engine import Engine
-from config import SLACK_SIGNING_SECRET, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET, SQLALCHEMY_DATABASE_URI
+from config import SLACK_CLIENT_ID, SQLALCHEMY_DATABASE_URI
 
 engine: Optional[Engine] = None
 installation_store: Optional[InstallationStore] = None
