@@ -7,13 +7,13 @@ from slack_sdk.oauth.installation_store import InstallationStore
 from slack_sdk.oauth.installation_store.sqlalchemy import SQLAlchemyInstallationStore
 from slack_sdk.oauth.state_store.sqlalchemy import SQLAlchemyOAuthStateStore
 from sqlalchemy.engine import Engine
-from config import SLACK_CLIENT_ID, SQLALCHEMY_DATABASE_URI
+from config import SLACK_CLIENT_ID, SQL_URI
 
 engine: Optional[Engine] = None
 installation_store: Optional[InstallationStore] = None
 
 logger = logging.getLogger(__name__)
-database_url = SQLALCHEMY_DATABASE_URI
+database_url = SQL_URI
 
 logging.getLogger("sqlalchemy.engine").setLevel(logging.DEBUG)
 engine = sqlalchemy.create_engine(database_url)
