@@ -21,25 +21,23 @@ def toggle_marketcap(rawcap, currency_symbol):
 def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)	
 	previous_close = stock.info['previousClose']
-	current_price = stock.info['regularMarketPrice']	
-	raw_volume = stock.info['averageVolume']
-	volume = numerize.numerize(raw_volume, 2)
+	current_price = stock.info['regularMarketPrice']			
 	logo = stock.info['logo_url']
 	is_valid_image = check_valid_image(logo)
 	currency_code = stock.info['currency'].upper()
-	currency_symbol = get_currency_symbol(currency_code)
+	currency_symbol = get_currency_symbol(currency_code)	
 		
 	stock_data = {
 			'symbol': stock.info['symbol'],
 			'long_name': stock.info['longName'],
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
 			'current_price': round(current_price, 2),
-			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),
-			'volume': volume,
+			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),			
 			'day_percent_change': round(get_percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_change(stock, "1mo"), 2),
-			'year_percent_change': round(get_period_change(stock, "ytd"), 2)
+			'year_percent_change': round(get_period_change(stock, "ytd"), 2),
+			'price_to_sales': round(stock.info['priceToSalesTrailing12Months'], 2)
 	}
 	
 	stock_content = [
@@ -62,7 +60,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Volume:* {currency_symbol}{stock_data['volume']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Price/Sales Ratio:* {stock_data['price_to_sales']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",

@@ -87,7 +87,7 @@ def open_home_tab(client, event, logger):
 @app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()
-	user_name = command['user_name']	
+	user_name = command['user_name']
 	try:
 		user_symbol = command['text']	
 		try:
