@@ -33,8 +33,6 @@ def generate_crypto_info(coin_id, user_name):
 	rounded_price = round(raw_price, 2)
 	raw_marketcap = get_price[coin_id]['usd_market_cap']
 	marketcap = numerize.numerize(raw_marketcap, 2)
-	raw_volume = get_price[coin_id]['usd_24h_vol']
-	volume = numerize.numerize(raw_volume, 2)
 	day_percent_change = get_price[coin_id]['usd_24h_change']
 	
 	extra_data = cg.get_coins_markets(ids=coin_id, vs_currency="usd", sparkline=False)
@@ -47,8 +45,7 @@ def generate_crypto_info(coin_id, user_name):
 	crypto_data = {
 		'long_name': long_name,
 		'price': format(rounded_price, ','),
-		'marketcap': marketcap,
-		'volume': volume,
+		'marketcap': marketcap,		
 		'day_percent_change': round(day_percent_change, 2),
 		'logo': logo,
 		'symbol': symbol,
@@ -57,6 +54,14 @@ def generate_crypto_info(coin_id, user_name):
 		'month_percent_change': round(get_period_change(coin_id, -30), 2),
 		'year_percent_change': round(get_period_change(coin_id, -365), 2)
 	}
+
+	price_content = f"*Price:* `${crypto_data['price']}` \n\n\n"
+	mcap_content = f"*Market Cap:* ${crypto_data['marketcap']} \n"
+	ath_price_content = f"*ATH Price:* ${crypto_data['ath_price']} \n\n\n"
+	day_content = f"*24hr:* {crypto_data['day_percent_change']}% \n"
+	week_content = f"*7d:* {crypto_data['week_percent_change']}% \n"
+	month_content = f"*30d:*  {crypto_data['month_percent_change']}% \n"
+	year_content = f"*1yr:* {crypto_data['year_percent_change']}%"
 
 	crypto_content = [
 		{
@@ -78,7 +83,7 @@ def generate_crypto_info(coin_id, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* ${crypto_data['price']} \n\n\n *Market Cap:* ${crypto_data['marketcap']} \n *Volume:* ${crypto_data['volume']}\n*ATH Price:* ${crypto_data['ath_price']} \n\n\n *24hr:*  {crypto_data['day_percent_change']}% \n *7d:*  {crypto_data['week_percent_change']}% \n *30d:*  {crypto_data['month_percent_change']}% \n *1yr:*  {crypto_data['year_percent_change']}%"
+			"text": f"{price_content} {mcap_content} {ath_price_content} {day_content} {week_content} {month_content} {year_content}"
 		},
 		"accessory": {
 			"type": "image",

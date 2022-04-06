@@ -14,7 +14,7 @@ def get_period_change(stock, period):
 def toggle_marketcap(rawcap, currency_symbol):
 	if rawcap:
 		clean_cap = numerize.numerize(rawcap, 2)
-		return f"\n *Market Cap:* {currency_symbol}{clean_cap}\n\n\n"
+		return f"*Market Cap:* `{currency_symbol}{clean_cap}` \n\n\n"
 	else:
 		return "\n\n\n"	
 
@@ -32,14 +32,19 @@ def generate_stock_info(symbol, user_name):
 			'long_name': stock.info['longName'],
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
 			'current_price': round(current_price, 2),
-			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),			
+			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),
 			'day_percent_change': round(get_percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_change(stock, "1mo"), 2),
 			'year_percent_change': round(get_period_change(stock, "ytd"), 2),
 	}
 
-	
+	price_content = f"*Price:* `{currency_symbol}{stock_data['current_price']}` \n"
+	# mcap content here is dealt with in toggle_marketcap func above
+	day_content = f"*24hr:* {stock_data['day_percent_change']}% \n"
+	week_content = f"*5d:* {stock_data['week_percent_change']}% \n"
+	month_content = f"*30d:*  {stock_data['month_percent_change']}% \n"
+	year_content = f"*1yr:*  {stock_data['year_percent_change']}%"
 	
 	stock_content = [
 		{
@@ -61,7 +66,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* `{currency_symbol}{stock_data['current_price']}` {stock_data['display_marketcap']} *24hr:* {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"{price_content} {stock_data['display_marketcap']} {day_content} {week_content} {month_content} {year_content}"
 		},
 		"accessory": {
 			"type": "image",
