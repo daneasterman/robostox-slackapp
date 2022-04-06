@@ -14,9 +14,9 @@ def get_period_change(stock, period):
 def toggle_marketcap(rawcap, currency_symbol):
 	if rawcap:
 		clean_cap = numerize.numerize(rawcap, 2)
-		return f"\n\n\n *Market Cap:* {currency_symbol}{clean_cap}\n"
+		return f"\n *Market Cap:* {currency_symbol}{clean_cap}\n\n\n"
 	else:
-		return "\n"		
+		return "\n\n\n"	
 
 def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)	
@@ -37,8 +37,9 @@ def generate_stock_info(symbol, user_name):
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_change(stock, "1mo"), 2),
 			'year_percent_change': round(get_period_change(stock, "ytd"), 2),
-			'price_to_sales': round(stock.info['priceToSalesTrailing12Months'], 2)
 	}
+
+	
 	
 	stock_content = [
 		{
@@ -60,7 +61,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*Price:* {currency_symbol}{stock_data['current_price']} {stock_data['display_marketcap']} *Price/Sales Ratio:* {stock_data['price_to_sales']} \n\n\n *24hr:*  {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
+			"text": f"*Price:* `{currency_symbol}{stock_data['current_price']}` {stock_data['display_marketcap']} *24hr:* {stock_data['day_percent_change']}% \n *5d:*  {stock_data['week_percent_change']}% \n *30d:*  {stock_data['month_percent_change']}% \n *1yr:*  {stock_data['year_percent_change']}%"
 		},
 		"accessory": {
 			"type": "image",
