@@ -14,9 +14,9 @@ def get_period_change(stock, period):
 def toggle_marketcap(rawcap, currency_symbol):
 	if rawcap:
 		clean_cap = numerize.numerize(rawcap, 2)
-		return f"*Market Cap:* `{currency_symbol}{clean_cap}` \n\n\n"
+		return f"*Market Cap:* {currency_symbol}{clean_cap} \n"
 	else:
-		return "\n\n\n"	
+		return f"*Market Cap:* N/A \n"
 
 def generate_stock_info(symbol, user_name):
 	stock = yf.Ticker(symbol)	
@@ -25,7 +25,10 @@ def generate_stock_info(symbol, user_name):
 	logo = stock.info['logo_url']
 	is_valid_image = check_valid_image(logo)
 	currency_code = stock.info['currency'].upper()
-	currency_symbol = get_currency_symbol(currency_code)	
+	currency_symbol = get_currency_symbol(currency_code)
+	price_hist = stock.history(period="max")
+	raw_ath = price_hist['High'].max()
+	rounded_ath = round(raw_ath, 2)
 		
 	stock_data = {
 			'symbol': stock.info['symbol'],
@@ -33,14 +36,16 @@ def generate_stock_info(symbol, user_name):
 			'logo': logo if is_valid_image else "https://i.imgur.com/2023VBv.jpg",
 			'current_price': round(current_price, 2),
 			'display_marketcap': toggle_marketcap(stock.info['marketCap'], currency_symbol),
+			'ath_price': format(rounded_ath, ','),
 			'day_percent_change': round(get_percent_change(previous_close, current_price), 2),
 			'week_percent_change': round(get_period_change(stock, "5d"), 2),
 			'month_percent_change': round(get_period_change(stock, "1mo"), 2),
 			'year_percent_change': round(get_period_change(stock, "ytd"), 2),
 	}
 
-	price_content = f"*Price:* `{currency_symbol}{stock_data['current_price']}` \n"
+	price_content = f"*Price:* `{currency_symbol}{stock_data['current_price']}` \n\n"
 	# mcap content here is dealt with in toggle_marketcap func above
+	ath_price_content = f"*ATH Price:* {currency_symbol}{stock_data['ath_price']} \n\n"
 	day_content = f"*24hr:* {stock_data['day_percent_change']}% \n"
 	week_content = f"*5d:* {stock_data['week_percent_change']}% \n"
 	month_content = f"*30d:*  {stock_data['month_percent_change']}% \n"
@@ -66,7 +71,7 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"{price_content} {stock_data['display_marketcap']} {day_content} {week_content} {month_content} {year_content}"
+			"text": f"{price_content} {stock_data['display_marketcap']} {ath_price_content} {day_content} {week_content} {month_content} {year_content}"
 		},
 		"accessory": {
 			"type": "image",
