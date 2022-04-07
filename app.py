@@ -84,7 +84,7 @@ def open_home_tab(client, event, logger):
   except Exception as e:
     logger.error(f"HOME TAB ERROR: {e}")
 
-@app.command("/dev_stock")
+@app.command("/stock")
 def run_stock_command(ack, say, command, logger):	
 	ack()
 	user_name = command['user_name']
@@ -115,7 +115,7 @@ def get_db_coin_id(user_symbol):
 	coin_id = doc.to_dict().get("coin_id")
 	return coin_id
 
-@app.command("/dev_coin")
+@app.command("/coin")
 def run_crypto_command(ack, say, command, logger):	
 	ack()
 	user_name = command['user_name']
