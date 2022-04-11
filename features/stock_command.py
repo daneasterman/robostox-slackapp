@@ -47,9 +47,12 @@ def generate_stock_info(symbol, user_name):
 	# mcap content here is dealt with in toggle_marketcap func above
 	ath_price_content = f"*ATH Price:* {currency_symbol}{stock_data['ath_price']} \n\n"
 	day_content = f"*24hr:* {stock_data['day_percent_change']}% \n"
-	week_content = f"*5d:* {stock_data['week_percent_change']}% \n"
+	week_content = f"*5d:*  {stock_data['week_percent_change']}% \n"
 	month_content = f"*30d:*  {stock_data['month_percent_change']}% \n"
 	year_content = f"*1yr:*  {stock_data['year_percent_change']}%"
+
+	yahoo_link_content = f"*View Data:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}> \n"
+	hypercharts_link_content = f"*View Charts:* <https://hypercharts.co/{stock_data['symbol']}/overview|Hypercharts | {stock_data['long_name']}>"
 	
 	stock_content = [
 		{
@@ -83,9 +86,9 @@ def generate_stock_info(symbol, user_name):
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": f"*View Charts:* <https://finance.yahoo.com/quote/{stock_data['symbol']}|Yahoo Finance | {stock_data['long_name']}>",
+			"text": f"{yahoo_link_content} {hypercharts_link_content}",
 		}
-	},
+	},	
 	{
 		"type": "divider"
 	}]

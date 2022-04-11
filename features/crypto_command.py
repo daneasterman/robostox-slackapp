@@ -55,9 +55,9 @@ def generate_crypto_info(coin_id, user_name):
 		'year_percent_change': round(get_period_change(coin_id, -365), 2)
 	}
 
-	price_content = f"*Price:* `${crypto_data['price']}` \n\n\n"
+	price_content = f"*Price:* `${crypto_data['price']}` \n\n"
 	mcap_content = f"*Market Cap:* ${crypto_data['marketcap']} \n"
-	ath_price_content = f"*ATH Price:* ${crypto_data['ath_price']} \n\n\n"
+	ath_price_content = f"*ATH Price:* ${crypto_data['ath_price']} \n\n"
 	day_content = f"*24hr:* {crypto_data['day_percent_change']}% \n"
 	week_content = f"*7d:* {crypto_data['week_percent_change']}% \n"
 	month_content = f"*30d:*  {crypto_data['month_percent_change']}% \n"
