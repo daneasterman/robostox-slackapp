@@ -67,7 +67,7 @@ with open('data/premium/stocks/raw/sg.json') as sg_file:
 		new_json['options'].append({
 		"text": {
 			"type": "plain_text",
-			"text": f"{s['Name']} - {s['Code']}",			
+			"text": f"{s['Name']} - {s['Code']}",
 		},
 		"value": s["Code"]
 })
