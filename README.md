@@ -8,5 +8,4 @@ For example for data on a stock like Tesla, just type: `/stock tsla` and for a c
 
 More background information on the project can be found here: [https://robostox.substack.com/p/introducing-the-robostox-slack-app](https://robostox.substack.com/p/introducing-the-robostox-slack-app)
 
-
-
+<img width="753" alt="airbnb" src="https://user-images.githubusercontent.com/4712052/216381170-08bb2192-d189-4845-8659-b0eae37b83f9.png">
